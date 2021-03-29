@@ -37,7 +37,7 @@ void MGSimon::Tick()
 {
 	float timeLeft = Controller()->getTimeLength() - Controller()->getTimer();
 
-	if (timeLeft < 2950 and timeLeft > 200)
+	if (timeLeft < 3200 and timeLeft > 200)
 	{
 		for (int i=0; i<MAX_CLIENTS; i++)
 		{

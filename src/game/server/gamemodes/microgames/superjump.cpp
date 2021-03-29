@@ -32,9 +32,6 @@ void MGSuperJump::End()
 		CCharacter *Char = GameServer()->GetPlayerChar(i);
 		if (not Char) continue;
 
-		Char->SetHookOthers(true);
-		Char->SetCollideOthers(true);
-		Char->SetSuperJump(false);
 		Controller()->teleportPlayerToSpawn(i);
 	}
 }

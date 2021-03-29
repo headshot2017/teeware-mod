@@ -34,9 +34,6 @@ void MGParachute::End()
 		CCharacter *Char = GameServer()->GetPlayerChar(i);
 		if (not Char) continue;
 
-		Char->SetHookOthers(true);
-		Char->SetHitOthers(true);
-		Char->SetCollideOthers(true);
 		Controller()->teleportPlayerToSpawn(i);
 	}
 }

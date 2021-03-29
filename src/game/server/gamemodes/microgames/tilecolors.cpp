@@ -26,6 +26,7 @@ void MGTileColors::Start()
 
 		Char->SetHookOthers(false);
 		Char->SetHitOthers(false);
+		Char->SetCollideOthers(false);
 		
 		Controller()->teleportPlayer(i, 8);
 	}
@@ -43,8 +44,6 @@ void MGTileColors::End()
 		CCharacter *Char = GameServer()->GetPlayerChar(i);
 		if (not Char) continue;
 
-		Char->SetHookOthers(true);
-		Char->SetHitOthers(true);
 		Controller()->teleportPlayerToSpawn(i);
 	}
 }
