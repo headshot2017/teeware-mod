@@ -3,11 +3,11 @@
 #include <engine/shared/config.h>
 #include "tilecolors.h"
 
-const char *colorNames[4][6] = {
-	{"RED", "APPLE", "GRENADE", "CHERRY", "TOMATO", "HEART"},
-	{"GREEN", "GRASS", "LEAF", "CACTUS", "FROG", "PEAR"},
-	{"BLUE", "OCEAN", "WATER", "PEPSI", "SONIC", "SKY"},
-	{"YELLOW", "JUICE", "DUCK", "LEMON", "EGG YOLK", "BANANA"}
+const char *colorNames[4][5] = {
+	{"RED", "ROSE", "GRENADE", "CHERRY", "HEART"},
+	{"GREEN", "GRASS", "LEAF", "CACTUS", "FROG"},
+	{"BLUE", "OCEAN", "WATER", "PEPSI", "SONIC"},
+	{"YELLOW", "JUICE", "DUCK", "EGG YOLK", "BANANA"}
 };
 
 
