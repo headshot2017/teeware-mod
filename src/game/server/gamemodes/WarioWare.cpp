@@ -23,6 +23,7 @@
 #include "microgames/parachute.h"
 #include "microgames/flood.h"
 #include "microgames/target.h"
+#include "microgames/tilecolors.h"
 
 
 CGameControllerWarioWare::CGameControllerWarioWare(class CGameContext *pGameServer) :
@@ -48,6 +49,7 @@ CGameControllerWarioWare::CGameControllerWarioWare(class CGameContext *pGameServ
 	m_microgames.push_back(new MGParachute(pGameServer, this));
 	m_microgames.push_back(new MGFlood(pGameServer, this));
 	m_microgames.push_back(new MGTarget(pGameServer, this));
+	m_microgames.push_back(new MGTileColors(pGameServer, this));
 }
 
 CGameControllerWarioWare::~CGameControllerWarioWare()
