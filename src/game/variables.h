@@ -172,7 +172,7 @@ MACRO_CONFIG_INT(SvRescue, sv_rescue, 0, 0, 1, CFGFLAG_SERVER, "Allow /rescue co
 MACRO_CONFIG_INT(SvRescueDelay, sv_rescue_delay, 5, 0, 1000, CFGFLAG_SERVER, "Number of seconds inbetween two rescues")
 
 // WarioWare
-MACRO_CONFIG_INT(WwForceMicrogame, ww_force_microgame, -1, -1, 13, CFGFLAG_SERVER, "force a specific microgame to always play")
+MACRO_CONFIG_INT(WwForceMicrogame, ww_force_microgame, -1, -1, 14, CFGFLAG_SERVER, "force a specific microgame to always play")
 MACRO_CONFIG_INT(WwMaxRounds, ww_max_rounds, 20, 1, 200, CFGFLAG_SERVER, "maximum microgame rounds, speedup halfway there, boss stage on final round")
 
 MACRO_CONFIG_INT(WwSndWaiting1_Offset, ww_snd_waiting1_offset,  1000, 0, 2147483647, CFGFLAG_SERVER, "'waiting for players 1' music offset in ms")
@@ -230,6 +230,8 @@ MACRO_CONFIG_INT(WwSndMgHitTheTarget_Offset, ww_snd_mg_hitthetarget_offset, 1000
 MACRO_CONFIG_INT(WwSndMgHitTheTarget_Length, ww_snd_mg_hitthetarget_length, 4000, 0, 2147483647, CFGFLAG_SERVER, "hit the target music length in ms")
 MACRO_CONFIG_INT(WwSndMgTileColors_Offset, ww_snd_mg_tilecolors_offset, 1000, 0, 2147483647, CFGFLAG_SERVER, "tile colors music offset in ms")
 MACRO_CONFIG_INT(WwSndMgTileColors_Length, ww_snd_mg_tilecolors_length, 8000, 0, 2147483647, CFGFLAG_SERVER, "tile colors music length in ms")
+MACRO_CONFIG_INT(WwSndMgBombRain_Offset, ww_snd_mg_bombrain_offset, 210000, 0, 2147483647, CFGFLAG_SERVER, "bomb rain microgame music offset in ms")
+MACRO_CONFIG_INT(WwSndMgBombRain_Length, ww_snd_mg_bombrain_length, 10500, 0, 2147483647, CFGFLAG_SERVER, "bomb rain microgame music length in ms")
 
 // debug
 

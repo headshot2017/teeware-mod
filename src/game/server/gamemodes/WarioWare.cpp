@@ -24,6 +24,7 @@
 #include "microgames/flood.h"
 #include "microgames/target.h"
 #include "microgames/tilecolors.h"
+#include "microgames/bombrain.h"
 
 
 CGameControllerWarioWare::CGameControllerWarioWare(class CGameContext *pGameServer) :
@@ -50,6 +51,7 @@ CGameControllerWarioWare::CGameControllerWarioWare(class CGameContext *pGameServ
 	m_microgames.push_back(new MGFlood(pGameServer, this));
 	m_microgames.push_back(new MGTarget(pGameServer, this));
 	m_microgames.push_back(new MGTileColors(pGameServer, this));
+	m_microgames.push_back(new MGBombRain(pGameServer, this));
 }
 
 CGameControllerWarioWare::~CGameControllerWarioWare()

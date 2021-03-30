@@ -107,6 +107,7 @@ public:
 
 	vec2 CpSpeed(int index, int Flags = 0);
 
+	class CTile *GameLayer() { return m_pTiles; }
 	class CTeleTile *TeleLayer() { return m_pTele; }
 	class CSwitchTile *SwitchLayer() { return m_pSwitch; }
 	class CTuneTile *TuneLayer() { return m_pTune; }
