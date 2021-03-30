@@ -86,7 +86,7 @@ void MGTileColors::setAndSayColor()
 	while (m_currColor == m_lastColor);
 
 	m_lastColor = m_currColor;
-	m_colorName = rand() % 6;
+	m_colorName = rand() % 5;
 
 	char aBuf[128];
 	str_format(aBuf, sizeof(aBuf), "%d.\nGo to the room with the %s color!", m_turn+1, colorNames[m_currColor][m_colorName]);
