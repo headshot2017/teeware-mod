@@ -58,7 +58,7 @@ void MGBombRain::Tick()
 {
 	float timeLeft = Controller()->getTimeLength() - Controller()->getTimer();
 
-	if (timeLeft < 7900) // start dropping nukes
+	if (timeLeft < 7900 and timeLeft > 650) // start dropping nukes
 	{
 		if ((Server()->Tick() + m_startTick) % 10 == 0) // drop one
 		{
