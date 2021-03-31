@@ -25,6 +25,7 @@
 #include "microgames/target.h"
 #include "microgames/tilecolors.h"
 #include "microgames/bombrain.h"
+#include "microgames/cow.h"
 
 
 CGameControllerWarioWare::CGameControllerWarioWare(class CGameContext *pGameServer) :
@@ -52,6 +53,7 @@ CGameControllerWarioWare::CGameControllerWarioWare(class CGameContext *pGameServ
 	m_microgames.push_back(new MGTarget(pGameServer, this));
 	m_microgames.push_back(new MGTileColors(pGameServer, this));
 	m_microgames.push_back(new MGBombRain(pGameServer, this));
+	m_microgames.push_back(new MGHitCow(pGameServer, this));
 }
 
 CGameControllerWarioWare::~CGameControllerWarioWare()
