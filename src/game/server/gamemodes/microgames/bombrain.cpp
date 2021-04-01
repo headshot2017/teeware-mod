@@ -55,6 +55,10 @@ void MGBombRain::Start()
 	GameServer()->TuningList()[1].m_GrenadeCurvature.Set((int)(7.f*100.0f));
 	GameServer()->TuningList()[1].m_GrenadeSpeed.Set((int)(600.f*100.0f));
 	GameServer()->TuningList()[1].m_GrenadeLifetime.Set((int)(10*100.0f));
+
+	// sync tunes
+	GameServer()->SendTuningParams(-1);
+	GameServer()->SendTuningParams(-1, 1);
 }
 
 void MGBombRain::End()
@@ -66,6 +70,10 @@ void MGBombRain::End()
 	GameServer()->TuningList()[1].m_GrenadeCurvature.Set((int)(7.f*100.0f));
 	GameServer()->TuningList()[1].m_GrenadeSpeed.Set((int)(1000.f*100.0f));
 	GameServer()->TuningList()[1].m_GrenadeLifetime.Set((int)(2*100.0f));
+
+	// sync tunes
+	GameServer()->SendTuningParams(-1);
+	GameServer()->SendTuningParams(-1, 1);
 }
 
 void MGBombRain::Tick()
