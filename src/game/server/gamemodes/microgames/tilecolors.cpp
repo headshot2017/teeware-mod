@@ -4,10 +4,10 @@
 #include "tilecolors.h"
 
 const char *colorNames[4][5] = {
-	{"RED", "RED", "GRENADE", "CHERRY", "HEART"},
+	{"RED", "ROSE", "GRENADE", "CHERRY", "HEART"},
 	{"GREEN", "GRASS", "LEAF", "CACTUS", "FROG"},
 	{"BLUE", "OCEAN", "WATER", "PEPSI", "SONIC"},
-	{"YELLOW", "JUICE", "DUCK", "EGG YOLK", "BANANA"}
+	{"YELLOW", "SUN", "DUCK", "EGG YOLK", "BANANA"}
 };
 
 
