@@ -6,8 +6,8 @@
 const char *colorNames[4][5] = {
 	{"RED", "ROSE", "GRENADE", "CHERRY", "HEART"},
 	{"GREEN", "GRASS", "LEAF", "CACTUS", "FROG"},
-	{"BLUE", "OCEAN", "WATER", "PEPSI", "SONIC"},
-	{"YELLOW", "SUN", "DUCK", "EGG YOLK", "BANANA"}
+	{"BLUE", "OCEAN", "WATER", "BLUE", "SONIC"},
+	{"YELLOW", "SUN", "RUBBER DUCKY", "EGG YOLK", "BANANA"}
 };
 
 
