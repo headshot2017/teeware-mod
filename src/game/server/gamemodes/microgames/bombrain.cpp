@@ -29,7 +29,7 @@ MGBombRain::MGBombRain(CGameContext* pGameServer, CGameControllerWarioWare* pCon
 				break;
 
 			case TILE_WARIOWARE_BOMBDOWN:
-				m_BombRainEntities.push_back(BombEntity(vec2(i % Width * 32 + 16, i / Width * 32 + 16), vec2(0, 1)));
+				m_BombRainEntities.push_back(BombEntity(vec2(i % Width * 32 + 16, i / Width * 32 + 16), vec2(0, 0)));
 				break;
 		}
 	}
@@ -47,11 +47,25 @@ void MGBombRain::Start()
 	m_startTick = Server()->Tick();
 	GameServer()->SendBroadcast("Avoid the bombs!", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgBombRain_Offset, g_Config.m_WwSndMgBombRain_Length);
+
+	// set to a slower speed
+	GameServer()->Tuning()->m_GrenadeCurvature.Set((int)(7.f*100.0f));
+	GameServer()->Tuning()->m_GrenadeSpeed.Set((int)(600.f*100.0f));
+	GameServer()->Tuning()->m_GrenadeLifetime.Set((int)(10*100.0f));
+	GameServer()->TuningList()[1].m_GrenadeCurvature.Set((int)(7.f*100.0f));
+	GameServer()->TuningList()[1].m_GrenadeSpeed.Set((int)(600.f*100.0f));
+	GameServer()->TuningList()[1].m_GrenadeLifetime.Set((int)(10*100.0f));
 }
 
 void MGBombRain::End()
 {
-	// nothing to clean
+	// reset to default tuning
+	GameServer()->Tuning()->m_GrenadeCurvature.Set((int)(7.f*100.0f));
+	GameServer()->Tuning()->m_GrenadeSpeed.Set((int)(1000.f*100.0f));
+	GameServer()->Tuning()->m_GrenadeLifetime.Set((int)(2*100.0f));
+	GameServer()->TuningList()[1].m_GrenadeCurvature.Set((int)(7.f*100.0f));
+	GameServer()->TuningList()[1].m_GrenadeSpeed.Set((int)(1000.f*100.0f));
+	GameServer()->TuningList()[1].m_GrenadeLifetime.Set((int)(2*100.0f));
 }
 
 void MGBombRain::Tick()
