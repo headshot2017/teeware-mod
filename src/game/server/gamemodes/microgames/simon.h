@@ -19,9 +19,6 @@ public:
 	void Start();
 	void End();
 	void Tick();
-	int OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon) {return 0;}
-	void OnCharacterDamage(int Victim, int Killer, int Dmg, int Weapon) {}
-	bool onChat(int client, const char *msg) {return false;}
 
 private:
 	int m_Someone; // if "Someone says" then don't do it

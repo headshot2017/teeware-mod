@@ -47,16 +47,19 @@ public:
 
 	// int OnCharacterDeath(pVictim, pKiller, Weapon)
 	// Called when a player dies.
-	virtual int OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon) = 0;
+	// Definition of this function in your microgame is optional.
+	virtual int OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon) {return 0;}
 
 	// int OnCharacterDamage(Victim, Killer, Dmg, Weapon)
 	// Called when a player is hurt.
-	virtual void OnCharacterDamage(int Victim, int Killer, int Dmg, int Weapon) = 0;
+	// Definition of this function in your microgame is optional.
+	virtual void OnCharacterDamage(int Victim, int Killer, int Dmg, int Weapon) {}
 
 	// bool onChat(client, msg)
 	// Called when a player sends a chat message.
-	// Returns a boolean: if false, the message is suppressed and not displayed.
-	virtual bool onChat(int client, const char *msg) = 0;
+	// Returns a boolean: if true, the message is suppressed and not displayed.
+	// Definition of this function in your microgame is optional.
+	virtual bool onChat(int client, const char *msg) {return false;}
 
 	const char *m_microgameName; // the microgame name
 	bool m_boss; // if this microgame is a boss
