@@ -38,14 +38,14 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 
 	if (controller->inMicroGame() and str_comp(controller->getMicroGame()->m_microgameName, "target") == 0)
 	{
+		pHit = GameServer()->m_World.IntersectBotCharacter(m_Pos, To, 0.f, At);
+	}
+	else
+	{
 		if(pOwnerChar ? (!(pOwnerChar->m_Hit&CCharacter::DISABLE_HIT_RIFLE) && m_Type == WEAPON_RIFLE) || (!(pOwnerChar->m_Hit&CCharacter::DISABLE_HIT_SHOTGUN) && m_Type == WEAPON_SHOTGUN) : g_Config.m_SvHit)
 			pHit = GameServer()->m_World.IntersectCharacter(m_Pos, To, 0.f, At, pDontHitSelf ? pOwnerChar : 0, m_Owner);
 		else
 			pHit = GameServer()->m_World.IntersectCharacter(m_Pos, To, 0.f, At, pDontHitSelf ? pOwnerChar : 0, m_Owner, pOwnerChar);
-	}
-	else
-	{
-		pHit = GameServer()->m_World.IntersectBotCharacter(m_Pos, To, 0.f, At);
 	}
 
 	if(!pHit || (pHit == pOwnerChar && g_Config.m_SvOldLaser) || (pHit != pOwnerChar && pOwnerChar ? (pOwnerChar->m_Hit&CCharacter::DISABLE_HIT_RIFLE and pHit->GetPlayer()->GetCID() < MAX_CLIENTS-1 and m_Type == WEAPON_RIFLE) || (pOwnerChar->m_Hit&CCharacter::DISABLE_HIT_SHOTGUN && m_Type == WEAPON_SHOTGUN) : !g_Config.m_SvHit))
