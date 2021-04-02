@@ -31,6 +31,9 @@ public:
 	virtual void TickPaused();
 	virtual void Snap(int SnappingClient);
 
+	unsigned short m_CollisionsByX;
+	unsigned short m_CollisionByY;
+
 private:
 	vec2 m_Direction;
 	int m_LifeSpan;
@@ -48,10 +51,16 @@ private:
 	int m_Bouncing;
 	bool m_Freeze;
 	int m_TuneZone;
+	
+	// headbot
+	bool m_FootMode;
+	int m_FootPickupDistance; //<-foot grenade diff.
 
 public:
 
 	void SetBouncing(int Value);
+	void SetFootMode(bool value) {m_FootMode = value;}
+	bool GetFootMode() const {return m_FootMode;}
 	void FillExtraInfo(CNetObj_Projectile *pProj);
 };
 

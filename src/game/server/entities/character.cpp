@@ -548,6 +548,15 @@ void CCharacter::FireWeapon()
 					WEAPON_GRENADE//Weapon
 					);//SoundImpact
 
+			CGameControllerWarioWare* controller = ((CGameControllerWarioWare*)GameServer()->m_pController);
+			if (controller->inMicroGame() and str_comp(controller->getMicroGame()->m_microgameName, "passball") == 0)
+			{
+				pProj->SetFootMode(true);
+				SetWeaponGot(WEAPON_GRENADE, false);
+				if (GetActiveWeapon() == WEAPON_GRENADE and GetLastWeapon() != WEAPON_GRENADE)
+					SetWeapon(GetLastWeapon());
+			}
+
 			// pack the Projectile and send it to the client Directly
 			CNetObj_Projectile p;
 			pProj->FillInfo(&p);

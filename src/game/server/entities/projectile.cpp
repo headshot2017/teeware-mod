@@ -44,6 +44,12 @@ CProjectile::CProjectile
 
 	m_TuneZone = GameServer()->Collision()->IsTune(GameServer()->Collision()->GetMapIndex(m_Pos));
 
+	m_FootMode = false;
+	if((Dir.x < 0?-Dir.x:Dir.x) > (Dir.y < 0?-Dir.y:Dir.y))
+		m_FootPickupDistance = abs(Dir.x * (float)Server()->TickSpeed() * GameServer()->Tuning()->m_GrenadeSpeed / 4000.f);
+	else
+		m_FootPickupDistance = abs(Dir.y * (float)Server()->TickSpeed() * GameServer()->Tuning()->m_GrenadeSpeed / 4000.f);
+
 	GameWorld()->InsertEntity(this);
 }
 
@@ -108,6 +114,108 @@ vec2 CProjectile::GetPos(float Time)
 
 void CProjectile::Tick()
 {
+	if (m_FootMode && m_Type == WEAPON_GRENADE) // taken from teefoot mod
+	{
+		float PreviousTick = (Server()->Tick()-m_StartTick-1)/(float)Server()->TickSpeed();
+		float CurrentTick = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
+		float NextTick = (Server()->Tick()-m_StartTick+1)/(float)Server()->TickSpeed();
+
+		vec2 CurPosition = GetPos(CurrentTick);
+		vec2 PrevPosition = GetPos(PreviousTick);
+		vec2 CollisionPosition;
+		vec2 FreePosition;
+
+		CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
+		CCharacter *TChar;
+
+		float TimeToCollision = -1.0f;
+		for(float SearchTick1 = CurrentTick; SearchTick1 <= NextTick; SearchTick1 += (NextTick-CurrentTick)/30.0f)
+		{
+			vec2 TempPosition = GetPos(SearchTick1);
+			if(GameServer()->Collision()->IsSolid((int) TempPosition.x, (int) TempPosition.y))
+					break;
+			TimeToCollision = SearchTick1;
+		}
+		if(TimeToCollision == -1.0f)
+		{
+			m_FootPickupDistance = 0;
+			for(float SearchTick2 = CurrentTick; SearchTick2 > CurrentTick-1.0f; SearchTick2-=0.02f)
+			{
+				vec2 SearchPosition = GetPos(SearchTick2);
+				if(!GameServer()->Collision()->IsSolid((int)SearchPosition.x, (int)SearchPosition.y))
+				{
+					TimeToCollision = SearchTick2;
+					CollisionPosition = GetPos(SearchTick2+0.02f);
+					FreePosition = GetPos(SearchTick2);
+					break;
+				}
+			}
+		}
+		else
+		{
+			TimeToCollision += CurrentTick;
+			CollisionPosition = GetPos(TimeToCollision+(NextTick-CurrentTick)/30.0f);
+			FreePosition = GetPos(TimeToCollision);
+		}
+		if(TimeToCollision < NextTick-(NextTick-CurrentTick)/30.0f)
+		{
+			bool CollidedAtX = GameServer()->Collision()->IsSolid((int)CollisionPosition.x, (int)FreePosition.y);
+			bool CollidedAtY = GameServer()->Collision()->IsSolid((int)FreePosition.x, (int)CollisionPosition.y);
+
+			if(CollidedAtX)
+			{
+				//m_Direction.x = -m_Direction.x/(g_Config.m_SvBounceLoss+100)*100;
+				m_Direction.x = -m_Direction.x/(50+100)*100;
+				/*
+				if (m_CollisionsByX >= 50)
+						GameServer()->m_World.DestroyEntity(this);
+				*/
+				m_CollisionsByX++;
+			}
+			else
+			{
+				m_Direction.x = m_Direction.x/(50+100)*100;
+				//m_Direction.x = m_Direction.x/(g_Config.m_SvBounceLoss+100)*100;
+				m_CollisionsByX = 0;
+			}
+			if(CollidedAtY)
+			{
+				m_Direction.y = -(m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*GameServer()->Tuning()->m_GrenadeSpeed*(Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed())/(50+100)*100;
+				//m_Direction.y = -(m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*GameServer()->Tuning()->m_GrenadeSpeed*(Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed())/(g_Config.m_SvBounceLoss+100)*100;
+				/*
+				if (m_CollisionByY >= 50)
+					GameServer()->m_World.DestroyEntity(this);
+				*/
+				m_CollisionByY++;
+			}
+			else
+			{
+				m_Direction.y = (m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*(Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed()*GameServer()->Tuning()->m_GrenadeSpeed)/(50+100)*100;
+				//m_Direction.y = (m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*(Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed()*GameServer()->Tuning()->m_GrenadeSpeed)/(g_Config.m_SvBounceLoss+100)*100;
+				m_CollisionByY = 0;
+			}
+			m_Pos = FreePosition;
+			m_StartTick = Server()->Tick();
+			m_FootPickupDistance = 0;
+
+			if(m_FootPickupDistance == 0)
+				TChar = GameServer()->m_World.IntersectCharacter(PrevPosition, CurPosition, 6.0f, CurPosition, NULL);
+			else
+			{
+				m_FootPickupDistance--;
+				TChar = GameServer()->m_World.IntersectCharacter(PrevPosition, CurPosition, 6.0f, CurPosition, OwnerChar);
+			}
+
+			if(TChar and not TChar->GetWeaponGot(WEAPON_GRENADE)) // picked up ball
+			{
+				GameServer()->m_World.DestroyEntity(this);
+				TChar->GiveWeapon(WEAPON_GRENADE, -1);
+				TChar->SetWeapon(WEAPON_GRENADE);
+			}
+		}
+		return;
+	}
+
 	float Pt = (Server()->Tick()-m_StartTick-1)/(float)Server()->TickSpeed();
 	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	vec2 PrevPos = GetPos(Pt);
@@ -261,9 +369,9 @@ void CProjectile::Snap(int SnappingClient)
 	CNetObj_Projectile *pProj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_ID, sizeof(CNetObj_Projectile)));
 	if(pProj)
 	{
-		/*if(SnappingClient > -1 && GameServer()->m_apPlayers[SnappingClient] && GameServer()->m_apPlayers[SnappingClient]->m_ClientVersion >= VERSION_DDNET_ANTIPING_PROJECTILE)
+		if(SnappingClient > -1 && not m_FootMode && m_Direction != vec2(0,0) && GameServer()->m_apPlayers[SnappingClient] && GameServer()->m_apPlayers[SnappingClient]->m_ClientVersion >= VERSION_DDNET_ANTIPING_PROJECTILE)
 			FillExtraInfo(pProj);
-		else*/
+		else
 			FillInfo(pProj);
 	}
 }

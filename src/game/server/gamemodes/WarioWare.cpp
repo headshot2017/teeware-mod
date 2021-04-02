@@ -27,6 +27,9 @@
 #include "microgames/bombrain.h"
 #include "microgames/cow.h"
 
+// bosses
+#include "microgames/passball.h"
+
 
 CGameControllerWarioWare::CGameControllerWarioWare(class CGameContext *pGameServer) :
 		IGameController(pGameServer), m_Teams(pGameServer)
@@ -54,6 +57,7 @@ CGameControllerWarioWare::CGameControllerWarioWare(class CGameContext *pGameServ
 	m_microgames.push_back(new MGTileColors(pGameServer, this));
 	m_microgames.push_back(new MGBombRain(pGameServer, this));
 	m_microgames.push_back(new MGHitCow(pGameServer, this));
+	m_microgames.push_back(new MGPassBall(pGameServer, this));
 }
 
 CGameControllerWarioWare::~CGameControllerWarioWare()
@@ -261,7 +265,7 @@ void CGameControllerWarioWare::rollMicroGame()
 		m_last_microgame = m_microgame;
 
 		do m_microgame = rand() % m_microgames.size();
-		while (m_microgame == m_last_microgame and m_microgames.size() > 1);
+		while ((m_microgame == m_last_microgame and m_microgames.size() > 1) or (m_round+1 == g_Config.m_WwMaxRounds and not m_microgames[m_microgame]->m_boss));
 	}
 	else
 		m_microgame = g_Config.m_WwForceMicrogame;
