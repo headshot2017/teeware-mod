@@ -26,6 +26,7 @@
 #include "microgames/tilecolors.h"
 #include "microgames/bombrain.h"
 #include "microgames/cow.h"
+#include "microgames/luckydoor.h"
 
 // bosses
 #include "microgames/passball.h"
@@ -58,6 +59,7 @@ CGameControllerWarioWare::CGameControllerWarioWare(class CGameContext *pGameServ
 	m_microgames.push_back(new MGBombRain(pGameServer, this));
 	m_microgames.push_back(new MGHitCow(pGameServer, this));
 	m_microgames.push_back(new MGPassBall(pGameServer, this));
+	m_microgames.push_back(new MGLuckyDoor(pGameServer, this));
 }
 
 CGameControllerWarioWare::~CGameControllerWarioWare()
