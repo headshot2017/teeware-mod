@@ -266,8 +266,16 @@ void CGameControllerWarioWare::rollMicroGame()
 	{
 		m_last_microgame = m_microgame;
 
-		do m_microgame = rand() % m_microgames.size();
-		while ((m_microgame == m_last_microgame and m_microgames.size() > 1 and not m_microgames[m_microgame]->m_boss) or (m_round+1 == g_Config.m_WwMaxRounds and m_microgames[m_microgame]->m_boss));
+		if (m_round+1 < g_Config.m_WwMaxRounds)
+		{
+			do m_microgame = rand() % m_microgames.size();
+			while ((m_microgame == m_last_microgame and m_microgames.size() > 1) or m_microgames[m_microgame]->m_boss);
+		}
+		else
+		{
+			do m_microgame = rand() % m_microgames.size();
+			while (not m_microgames[m_microgame]->m_boss);
+		}
 	}
 	else
 		m_microgame = g_Config.m_WwForceMicrogame;
