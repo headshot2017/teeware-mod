@@ -11,11 +11,14 @@ MGLuckyDoor::MGLuckyDoor(CGameContext* pGameServer, CGameControllerWarioWare* pC
 
 void MGLuckyDoor::Start()
 {
-	int CorrectTele = rand() % 4 + 14; // first door tele ID starts at 14
+	int CorrectTeles[2] = {rand() % 4 + 14, rand() % 4 + 14}; // first door tele ID starts at 14
+	while (CorrectTeles[1] == CorrectTeles[0])
+		CorrectTeles[1] = rand() % 4 + 14;
+
 	m_DoorTeles.clear();
 
 	char abuf[128];
-	str_format(abuf, sizeof(abuf), "correct tele: %d", CorrectTele);
+	str_format(abuf, sizeof(abuf), "correct teles: %d %d", CorrectTeles[0], CorrectTeles[1]);
 	GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "TeeWare::luckydoor", abuf);
 
 	// rig teles 14-17
@@ -26,7 +29,8 @@ void MGLuckyDoor::Start()
 	{
 		if (GameServer()->Collision()->TeleLayer()[i].m_Type == TILE_TELEINEVIL)
 		{
-			if (GameServer()->Collision()->TeleLayer()[i].m_Number == CorrectTele)
+			if (GameServer()->Collision()->TeleLayer()[i].m_Number == CorrectTeles[0] or
+				GameServer()->Collision()->TeleLayer()[i].m_Number == CorrectTeles[1])
 			{
 				// rig as correct
 				m_DoorTeles.push_back(std::pair<int, CTeleTile*>(GameServer()->Collision()->TeleLayer()[i].m_Number, &GameServer()->Collision()->TeleLayer()[i]));
