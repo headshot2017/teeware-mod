@@ -438,7 +438,10 @@ void CGameControllerWarioWare::Tick()
 				int songs2[2] = {g_Config.m_WwSndWaiting1_Length, g_Config.m_WwSndWaiting2_Length};
 				int ind = rand() % 2;
 				setPlayerTimers(songs1[ind], songs2[ind]);
-				
+
+				if (inMicroGame())
+					m_microgames[m_microgame]->End();
+
 				m_state = WW_WAITING;
 				IGameController::StartRound();
 				StartRound();
