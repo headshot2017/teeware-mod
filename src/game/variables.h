@@ -172,7 +172,7 @@ MACRO_CONFIG_INT(SvRescue, sv_rescue, 0, 0, 1, CFGFLAG_SERVER, "Allow /rescue co
 MACRO_CONFIG_INT(SvRescueDelay, sv_rescue_delay, 5, 0, 1000, CFGFLAG_SERVER, "Number of seconds inbetween two rescues")
 
 // WarioWare
-MACRO_CONFIG_INT(WwForceMicrogame, ww_force_microgame, -1, -1, 17, CFGFLAG_SERVER, "force a specific microgame to always play")
+MACRO_CONFIG_INT(WwForceMicrogame, ww_force_microgame, -1, -1, 18, CFGFLAG_SERVER, "force a specific microgame to always play")
 MACRO_CONFIG_INT(WwMaxRounds, ww_max_rounds, 20, 1, 200, CFGFLAG_SERVER, "maximum microgame rounds, speedup halfway there, boss stage on final round")
 
 MACRO_CONFIG_INT(WwSndWaiting1_Offset, ww_snd_waiting1_offset,  1000, 0, 2147483647, CFGFLAG_SERVER, "'waiting for players 1' music offset in ms")
@@ -238,6 +238,8 @@ MACRO_CONFIG_INT(WwSndMgPassBall_Offset, ww_snd_mg_passball_offset, 1000, 0, 214
 MACRO_CONFIG_INT(WwSndMgPassBall_Length, ww_snd_mg_passball_length, 19200, 0, 2147483647, CFGFLAG_SERVER, "pass the ball music length in ms")
 MACRO_CONFIG_INT(WwSndMgLuckyDoor_Offset, ww_snd_mg_luckydoor_offset, 1000, 0, 2147483647, CFGFLAG_SERVER, "lucky door music offset in ms")
 MACRO_CONFIG_INT(WwSndMgLuckyDoor_Length, ww_snd_mg_luckydoor_length, 9900, 0, 2147483647, CFGFLAG_SERVER, "lucky door music length in ms")
+MACRO_CONFIG_INT(WwSndMgSurvive_Offset, ww_snd_mg_bombrain_offset, 222000, 0, 2147483647, CFGFLAG_SERVER, "survive microgame music offset in ms")
+MACRO_CONFIG_INT(WwSndMgSurvive_Length, ww_snd_mg_bombrain_length, 40464, 0, 2147483647, CFGFLAG_SERVER, "survive microgame music length in ms")
 
 // debug
 

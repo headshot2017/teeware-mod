@@ -271,6 +271,10 @@ public:
 	void SetNinjaActivationDir(vec2 ActivationDir) { m_Ninja.m_ActivationDir = ActivationDir; };
 	void SetNinjaActivationTick(int ActivationTick) { m_Ninja.m_ActivationTick = ActivationTick; };
 	void SetNinjaCurrentMoveTime(int CurrentMoveTime) { m_Ninja.m_CurrentMoveTime = CurrentMoveTime; };
+
+	// headbot
+	void SetHealth(int amnt) {m_Health = amnt;}
+	int GetHealth() const {return m_Health;}
 	void setTimer(float ms);
 	float getTimer();
 	

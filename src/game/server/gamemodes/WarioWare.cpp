@@ -30,6 +30,7 @@
 
 // bosses
 #include "microgames/passball.h"
+#include "microgames/ninjasurvival.h"
 
 
 CGameControllerWarioWare::CGameControllerWarioWare(class CGameContext *pGameServer) :
@@ -60,6 +61,7 @@ CGameControllerWarioWare::CGameControllerWarioWare(class CGameContext *pGameServ
 	m_microgames.push_back(new MGHitCow(pGameServer, this));
 	m_microgames.push_back(new MGPassBall(pGameServer, this));
 	m_microgames.push_back(new MGLuckyDoor(pGameServer, this));
+	m_microgames.push_back(new MGNinjaSurvival(pGameServer, this));
 }
 
 CGameControllerWarioWare::~CGameControllerWarioWare()

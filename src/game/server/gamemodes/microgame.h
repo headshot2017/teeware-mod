@@ -61,6 +61,11 @@ public:
 	// Definition of this function in your microgame is optional.
 	virtual bool onChat(int client, const char *msg) {return false;}
 
+	// void onBotInput(Input)
+	// Called before sending input changes to the bot player with ID 63.
+	// You can use this to implement an AI player of sorts in your microgame.
+	virtual void OnBotInput(CNetObj_PlayerInput* Input) {}
+
 	const char *m_microgameName; // the microgame name
 	bool m_boss; // if this microgame is a boss
 
