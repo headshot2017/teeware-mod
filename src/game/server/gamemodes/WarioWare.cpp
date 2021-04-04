@@ -182,7 +182,7 @@ void CGameControllerWarioWare::nextWarioState()
 				setPlayerTimers(g_Config.m_WwSndLoseFast_Offset, g_Config.m_WwSndLoseFast_Length);
 			onMicroGameEnd();
 
-			for (int i=0; i<MAX_CLIENTS; i++)
+			for (int i=0; i<MAX_CLIENTS-1; i++)
 			{
 				if (not GameServer()->m_apPlayers[i]) continue;
 				
