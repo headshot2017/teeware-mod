@@ -77,7 +77,7 @@ CGameControllerWarioWare::~CGameControllerWarioWare()
 void CGameControllerWarioWare::StartRound()
 {
 	int online = 0;
-	for (int i=0; i<MAX_CLIENTS; i++)
+	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
 		if (not GameServer()->m_apPlayers[i]) continue;
 		GameServer()->m_apPlayers[i]->m_Score = 0;
