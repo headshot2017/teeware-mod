@@ -11,7 +11,7 @@ MGNinjaSurvival::MGNinjaSurvival(CGameContext* pGameServer, CGameControllerWario
 
 void MGNinjaSurvival::Start()
 {
-	m_Moved = m_KilledAll = false;
+	m_Moved = false;
 	m_startTick = Server()->Tick();
 
 	for (int i=0; i<MAX_CLIENTS-1; i++)
