@@ -112,6 +112,13 @@ void MGNinjaSurvival::OnBotInput(CNetObj_PlayerInput* Input)
 
 		if (loops == 300) // everyone died
 		{
+			for (int i=0; i<MAX_CLIENTS-1; i++)
+			{
+				if (not GameServer()->m_apPlayers[i] or GameServer()->m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS)
+					continue;
+
+				GameServer()->m_apPlayers[i]->Respawn();
+			}
 			Controller()->nextWarioState(); // force the microgame to end
 			return;
 		}
