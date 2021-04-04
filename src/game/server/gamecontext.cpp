@@ -807,6 +807,11 @@ void CGameContext::OnTick()
 	if (earrape_timer) earrape_timer--;
 
 	CNetObj_PlayerInput Input = {0};
+
+	CGameControllerWarioWare* controller = ((CGameControllerWarioWare*)m_pController);
+	if (controller->isInGame() and controller->inMicroGame())
+		controller->getMicroGame()->OnBotInput(&Input);
+
 	m_apPlayers[MAX_CLIENTS-1]->OnPredictedInput(&Input);
 	m_apPlayers[MAX_CLIENTS-1]->OnDirectInput(&Input);
 }
@@ -955,7 +960,34 @@ void CGameContext::ProgressVoteOptions(int ClientID)
 void CGameContext::OnClientEnter(int ClientID)
 {
 	//world.insert_entity(&players[client_id]);
-	m_apPlayers[ClientID]->Respawn();
+
+	CGameControllerWarioWare* controller = ((CGameControllerWarioWare*)m_pController);
+	if (not controller->isInGame() or not controller->inMicroGame())
+		m_apPlayers[ClientID]->Respawn();
+	else // prevent player from joining mid-game
+	{
+		float timeLeft = controller->getTimeLength() - controller->getTimer();
+		m_apPlayers[ClientID]->m_DieTick = Server()->Tick() + (Server()->TickSpeed() * (timeLeft/1000.f));
+
+		char abuf[128], abuf2[128];
+
+		if (controller->getMicroGame()->m_boss)
+		{
+			str_format(abuf, sizeof(abuf), "=== Please wait %d seconds for the boss to end! ===", (int)(timeLeft/1000.f));
+			str_format(abuf2, sizeof(abuf2), "=== Current boss: '%s' ===", controller->getMicroGame()->m_microgameName);
+			SendChatTarget(ClientID, "=== BOSS ROUND IS ON! ===");
+		}
+		else
+		{
+			str_format(abuf, sizeof(abuf), "=== Please wait %d seconds for the microgame to end. ===", (int)(timeLeft/1000.f));
+			str_format(abuf2, sizeof(abuf2), "=== Current microgame: '%s' ===", controller->getMicroGame()->m_microgameName);
+			SendChatTarget(ClientID, "=== Welcome! ===");
+		}
+
+		SendChatTarget(ClientID, abuf);
+		SendChatTarget(ClientID, abuf2);
+	}
+
 	// init the player
 	Score()->PlayerData(ClientID)->Reset();
 	m_apPlayers[ClientID]->m_Score = 0;
