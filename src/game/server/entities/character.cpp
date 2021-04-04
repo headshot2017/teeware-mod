@@ -1035,10 +1035,16 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 	{
 		controller->OnCharacterDamage(m_pPlayer->GetCID(), From, Dmg, Weapon);
 	}
-	else if (controller->getWarioState() == WW_GAMEOVER and From == controller->finalWinner)
+	else if (controller->getWarioState() == WW_GAMEOVER)
 	{
-		float timeLeft = (controller->getTimeLength() - controller->getTimer()) / 1000.f;
-		Die(From, Weapon, timeLeft);
+		for (unsigned i=0; i<controller->finalWinners.size(); i++)
+		{
+			if (From == controller->finalWinners[i])
+			{
+				float timeLeft = (controller->getTimeLength() - controller->getTimer()) / 1000.f;
+				Die(From, Weapon, timeLeft);
+			}
+		}
 	}
 
 	return true;

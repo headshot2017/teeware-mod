@@ -70,7 +70,7 @@ public:
 	
 	// wins
 	bool g_Complete[MAX_CLIENTS]; // which players won a microgame
-	int finalWinner; // final winner
+	std::vector<int> finalWinners; // final winners
 
 private:
 	int m_state, m_warioState, m_last_microgame, m_microgame, m_round;

@@ -90,7 +90,7 @@ void CGameControllerWarioWare::StartRound()
 	m_warioState = WW_JINGLING;
 	m_round = 0;
 	m_speedUp = false;
-	finalWinner = -1;
+	finalWinners.clear();
 	
 	if (m_state == WW_WAITING)
 	{
@@ -299,30 +299,53 @@ void CGameControllerWarioWare::rollMicroGame()
 void CGameControllerWarioWare::doGameOver()
 {
 	int highest = 0;
-	CPlayer *winner;
+	std::vector<CPlayer*> winners;
 
-	for (int i=0; i<MAX_CLIENTS; i++)
+	setPlayerTimers(g_Config.m_WwSndFinalLose_Offset, g_Config.m_WwSndFinalLose_Length);
+
+	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
 		if (GameServer()->m_apPlayers[i] and GameServer()->m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
 		{
 			CPlayer *Player = GameServer()->m_apPlayers[i];
 			if (Player->m_Score > highest)
-			{
-				finalWinner = i;
-				winner = Player;
 				highest = Player->m_Score;
-			}
+		}
+	}
+
+	// again but get players with the same score.
+	for (int i=0; i<MAX_CLIENTS-1; i++)
+	{
+		if (GameServer()->m_apPlayers[i] and GameServer()->m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
+		{
+			CPlayer *Player = GameServer()->m_apPlayers[i];
+			if (Player->m_Score == highest)
+				finalWinners.push_back(i);
+			if (Player->GetCharacter())
+				Player->GetCharacter()->setTimer(g_Config.m_WwSndFinalWin_Offset);
 		}
 	}
 	
 	GameServer()->SendBroadcast("", -1);
 	char aBuf[128];
-	setPlayerTimers(g_Config.m_WwSndFinalLose_Offset, g_Config.m_WwSndFinalLose_Length);
-	if (winner->GetCharacter()) winner->GetCharacter()->setTimer(g_Config.m_WwSndFinalWin_Offset);
 
-	str_format(aBuf, sizeof(aBuf), "%s wins!", Server()->ClientName(winner->GetCID()));
+	std::string winStr;
+	for (unsigned i=0; i<finalWinners.size(); i++)
+	{
+		char name[128];
+
+		str_format(name, sizeof(name), "%s'%s'%s",
+			(finalWinners.size() > 1 and i == finalWinners.size()-1) ? "and " : "",
+			Server()->ClientName(finalWinners[i]),
+			(finalWinners.size() > 1 and i < finalWinners.size()-2) ? ", " : " "
+		);
+
+		winStr += name;
+	}
+
+	str_format(aBuf, sizeof(aBuf), "%s%s!", winStr.c_str(), (finalWinners.size() > 1) ? "win" : "wins");
+
 	GameServer()->SendChat(-1, CGameContext::CHAT_ALL, aBuf);
-	
 	m_warioState = WW_GAMEOVER;
 }
 
