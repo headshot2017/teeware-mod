@@ -283,7 +283,7 @@ void CGameControllerWarioWare::rollMicroGame()
 		m_microgame = g_Config.m_WwForceMicrogame;
 
 	int online = 0;
-	for (int i=0; i<MAX_CLIENTS; i++)
+	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
 		if (not GameServer()->m_apPlayers[i] or GameServer()->m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS) continue;
 		g_Complete[i] = false;
@@ -390,7 +390,7 @@ void CGameControllerWarioWare::Tick()
 	else if (getTimer() == 500) StartRound();
 	
 	int online = 0;
-	for (int i=0; i<MAX_CLIENTS; i++)
+	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
 		if (not Server()->ClientIngame(i) or GameServer()->m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS) continue;
 		CPlayer *Player = GameServer()->m_apPlayers[i];
