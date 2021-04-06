@@ -53,14 +53,21 @@ private:
 	int m_TuneZone;
 	
 	// headbot
-	bool m_FootMode;
+	int m_FootMode;
 	int m_FootPickupDistance; //<-foot grenade diff.
+	int m_FootBounceLoss;
+	bool m_FillExtraInfo;
 
 public:
 
 	void SetBouncing(int Value);
-	void SetFootMode(bool value) {m_FootMode = value;}
-	bool GetFootMode() const {return m_FootMode;}
+	int GetBouncing() const {return m_Bouncing;}
+	void SetFootMode(int value) {m_FootMode = value;}
+	int GetFootMode() const {return m_FootMode;}
+	void SetBounceLoss(int value) {m_FootBounceLoss = value;}
+	int GetBounceLoss() const {return m_FootBounceLoss;}
+	void SetFillExtraInfo(bool value) {m_FillExtraInfo = value;}
+	bool GetFillExtraInfo() const {return m_FillExtraInfo;}
 	void FillExtraInfo(CNetObj_Projectile *pProj);
 };
 

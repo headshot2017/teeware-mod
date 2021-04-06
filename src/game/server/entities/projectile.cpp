@@ -44,11 +44,13 @@ CProjectile::CProjectile
 
 	m_TuneZone = GameServer()->Collision()->IsTune(GameServer()->Collision()->GetMapIndex(m_Pos));
 
-	m_FootMode = false;
+	m_FootMode = 0;
 	if((Dir.x < 0?-Dir.x:Dir.x) > (Dir.y < 0?-Dir.y:Dir.y))
 		m_FootPickupDistance = abs(Dir.x * (float)Server()->TickSpeed() * GameServer()->Tuning()->m_GrenadeSpeed / 4000.f);
 	else
 		m_FootPickupDistance = abs(Dir.y * (float)Server()->TickSpeed() * GameServer()->Tuning()->m_GrenadeSpeed / 4000.f);
+	m_FootBounceLoss = 50;
+	m_FillExtraInfo = true;
 
 	GameWorld()->InsertEntity(this);
 }
@@ -128,6 +130,28 @@ void CProjectile::Tick()
 		CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
 		CCharacter *TChar;
 
+		if(m_FootMode == 2 && m_LifeSpan > -1)
+			m_LifeSpan--;
+
+		if(m_LifeSpan == -1)
+		{
+			if(m_Explosive)
+			{
+				int64_t TeamMask = -1LL;
+				if (OwnerChar && OwnerChar->IsAlive())
+				{
+					TeamMask = OwnerChar->Teams()->TeamMask(OwnerChar->Team(), -1, m_Owner);
+				}
+
+				GameServer()->CreateExplosion(CurPosition, m_Owner, m_Weapon, m_Owner == -1, (!OwnerChar ? -1 : OwnerChar->Team()),
+				(m_Owner != -1)? TeamMask : -1LL);
+				GameServer()->CreateSound(CurPosition, m_SoundImpact,
+				(m_Owner != -1)? TeamMask : -1LL);
+			}
+			GameServer()->m_World.DestroyEntity(this);
+			return;
+		}
+
 		float TimeToCollision = -1.0f;
 		for(float SearchTick1 = CurrentTick; SearchTick1 <= NextTick; SearchTick1 += (NextTick-CurrentTick)/30.0f)
 		{
@@ -164,8 +188,11 @@ void CProjectile::Tick()
 
 			if(CollidedAtX)
 			{
-				//m_Direction.x = -m_Direction.x/(g_Config.m_SvBounceLoss+100)*100;
-				m_Direction.x = -m_Direction.x/(50+100)*100;
+				if (m_FootMode != 2)
+					m_Direction.x = -m_Direction.x/(m_FootBounceLoss+100)*100;
+				else
+					m_Direction.x = -m_Direction.x;
+
 				/*
 				if (m_CollisionsByX >= 50)
 						GameServer()->m_World.DestroyEntity(this);
@@ -174,14 +201,18 @@ void CProjectile::Tick()
 			}
 			else
 			{
-				m_Direction.x = m_Direction.x/(50+100)*100;
-				//m_Direction.x = m_Direction.x/(g_Config.m_SvBounceLoss+100)*100;
+				if (m_FootMode != 2)
+					m_Direction.x = m_Direction.x/(m_FootBounceLoss+100)*100;
+
 				m_CollisionsByX = 0;
 			}
 			if(CollidedAtY)
 			{
-				m_Direction.y = -(m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*GameServer()->Tuning()->m_GrenadeSpeed*(Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed())/(50+100)*100;
-				//m_Direction.y = -(m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*GameServer()->Tuning()->m_GrenadeSpeed*(Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed())/(g_Config.m_SvBounceLoss+100)*100;
+				if (m_FootMode != 2)
+					m_Direction.y = -(m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*GameServer()->Tuning()->m_GrenadeSpeed*(Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed())/(m_FootBounceLoss+100)*100;
+				else
+					m_Direction.y = -(m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*GameServer()->Tuning()->m_GrenadeSpeed*(Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed())/(5+100)*100;
+
 				/*
 				if (m_CollisionByY >= 50)
 					GameServer()->m_World.DestroyEntity(this);
@@ -190,27 +221,38 @@ void CProjectile::Tick()
 			}
 			else
 			{
-				m_Direction.y = (m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*(Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed()*GameServer()->Tuning()->m_GrenadeSpeed)/(50+100)*100;
-				//m_Direction.y = (m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*(Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed()*GameServer()->Tuning()->m_GrenadeSpeed)/(g_Config.m_SvBounceLoss+100)*100;
+				if (m_FootMode != 2)
+					m_Direction.y = (m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*(Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed()*GameServer()->Tuning()->m_GrenadeSpeed)/(m_FootBounceLoss+100)*100;
+				else
+					m_Direction.y = (m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*(Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed()*GameServer()->Tuning()->m_GrenadeSpeed)/(5+100)*100;
+
 				m_CollisionByY = 0;
 			}
 			m_Pos = FreePosition;
 			m_StartTick = Server()->Tick();
 			m_FootPickupDistance = 0;
+		}
+		if(m_FootPickupDistance == 0)
+			TChar = GameServer()->m_World.IntersectCharacter(PrevPosition, CurPosition, 6.0f, CurPosition, NULL);
+		else
+		{
+			m_FootPickupDistance--;
+			TChar = GameServer()->m_World.IntersectCharacter(PrevPosition, CurPosition, 6.0f, CurPosition, OwnerChar);
+		}
 
-			if(m_FootPickupDistance == 0)
-				TChar = GameServer()->m_World.IntersectCharacter(PrevPosition, CurPosition, 6.0f, CurPosition, NULL);
-			else
+		if(TChar) // player collided with ball
+		{
+			if (m_FootMode == 1 and not TChar->GetWeaponGot(WEAPON_GRENADE)) // pickup
 			{
-				m_FootPickupDistance--;
-				TChar = GameServer()->m_World.IntersectCharacter(PrevPosition, CurPosition, 6.0f, CurPosition, OwnerChar);
-			}
-
-			if(TChar and not TChar->GetWeaponGot(WEAPON_GRENADE)) // picked up ball
-			{
-				GameServer()->m_World.DestroyEntity(this);
 				TChar->GiveWeapon(WEAPON_GRENADE, -1);
 				TChar->SetWeapon(WEAPON_GRENADE);
+				GameServer()->m_World.DestroyEntity(this);
+			}
+			else if (m_FootMode == 2) // explode
+			{
+				GameServer()->CreateExplosion(CurPosition, m_Owner, m_Weapon, m_Owner == -1, (!TChar ? -1 : TChar->Team()), -1LL);
+				GameServer()->CreateSound(CurPosition, m_SoundImpact, -1LL);
+				GameServer()->m_World.DestroyEntity(this);
 			}
 		}
 		return;
@@ -260,10 +302,13 @@ void CProjectile::Tick()
 	{
 		if(m_Explosive/*??*/ && (!pTargetChr || (pTargetChr && (!m_Freeze || (m_Weapon == WEAPON_SHOTGUN && Collide)))))
 		{
-			GameServer()->CreateExplosion(ColPos, m_Owner, m_Weapon, m_Owner == -1, (!pTargetChr ? -1 : pTargetChr->Team()),
-			(m_Owner != -1)? TeamMask : -1LL);
-			GameServer()->CreateSound(ColPos, m_SoundImpact,
-			(m_Owner != -1)? TeamMask : -1LL);
+			if (m_Bouncing == 0)
+			{
+				GameServer()->CreateExplosion(ColPos, m_Owner, m_Weapon, m_Owner == -1, (!pTargetChr ? -1 : pTargetChr->Team()),
+				(m_Owner != -1)? TeamMask : -1LL);
+				GameServer()->CreateSound(ColPos, m_SoundImpact,
+				(m_Owner != -1)? TeamMask : -1LL);
+			}
 		}
 		else if(pTargetChr && m_Freeze && ((m_Layer == LAYER_SWITCH && GameServer()->Collision()->m_pSwitchers[m_Number].m_Status[pTargetChr->Team()]) || m_Layer != LAYER_SWITCH))
 		{
@@ -369,7 +414,7 @@ void CProjectile::Snap(int SnappingClient)
 	CNetObj_Projectile *pProj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_ID, sizeof(CNetObj_Projectile)));
 	if(pProj)
 	{
-		if(SnappingClient > -1 && not m_FootMode && m_Direction != vec2(0,0) && GameServer()->m_apPlayers[SnappingClient] && GameServer()->m_apPlayers[SnappingClient]->m_ClientVersion >= VERSION_DDNET_ANTIPING_PROJECTILE)
+		if(SnappingClient > -1 && not m_FootMode && m_FillExtraInfo && m_Direction != vec2(0,0) && GameServer()->m_apPlayers[SnappingClient] && GameServer()->m_apPlayers[SnappingClient]->m_ClientVersion >= VERSION_DDNET_ANTIPING_PROJECTILE)
 			FillExtraInfo(pProj);
 		else
 			FillInfo(pProj);
