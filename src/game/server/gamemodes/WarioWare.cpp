@@ -86,7 +86,7 @@ void CGameControllerWarioWare::StartRound()
 	{
 		if (not GameServer()->m_apPlayers[i]) continue;
 		GameServer()->m_apPlayers[i]->m_Score = 0;
-		if (GameServer()->m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS) continue;
+		if (GameServer()->m_apPlayers[i]->IsVoluntarySpectator()) continue;
 
 		++online;
 	}
@@ -181,22 +181,19 @@ void CGameControllerWarioWare::nextWarioState()
 		case WW_MICROGAME: // microgame finished
 			m_round++;
 
+			onMicroGameEnd();
 			if (not m_speedUp)
 				setPlayerTimers(g_Config.m_WwSndLose_Offset, g_Config.m_WwSndLose_Length);
 			else
 				setPlayerTimers(g_Config.m_WwSndLoseFast_Offset, g_Config.m_WwSndLoseFast_Length);
-			onMicroGameEnd();
 
 			for (int i=0; i<MAX_CLIENTS-1; i++)
 			{
-				if (not GameServer()->m_apPlayers[i]) continue;
-				
-				if (GameServer()->m_apPlayers[i]->IsOut())
-					GameServer()->m_apPlayers[i]->SetTeam(TEAM_SPECTATORS, false);
-
 				GameServer()->SendBroadcast((g_Complete[i]) ? "You win!" : "You failed...", i);
-				
+
 				CCharacter *Char = GameServer()->GetPlayerChar(i);
+				if (not Char) continue;
+
 				if (g_Complete[i])
 				{
 					GameServer()->m_apPlayers[i]->m_Score += (m_round == g_Config.m_WwMaxRounds) ? 5 : 1;
@@ -257,7 +254,15 @@ void CGameControllerWarioWare::onMicroGameEnd()
 	m_microgames[m_microgame]->End();
 	for (int i=0; i<MAX_CLIENTS; i++)
 	{
+		CPlayer *Player = GameServer()->m_apPlayers[i];
 		CCharacter *Char = GameServer()->GetPlayerChar(i);
+
+		if (Player and Player->IsOut())
+		{
+			Player->SetTeam(0, false);
+			Player->TryRespawn();
+		}
+
 		if (not Char) continue;
 
 		Char->SetHookOthers(true);
@@ -296,7 +301,7 @@ void CGameControllerWarioWare::rollMicroGame()
 	int online = 0;
 	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
-		if (not GameServer()->m_apPlayers[i] or GameServer()->m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS) continue;
+		if (not GameServer()->m_apPlayers[i] or GameServer()->m_apPlayers[i]->IsVoluntarySpectator()) continue;
 		g_Complete[i] = false;
 		++online;
 	}
@@ -316,7 +321,7 @@ void CGameControllerWarioWare::doGameOver()
 
 	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
-		if (GameServer()->m_apPlayers[i] and GameServer()->m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
+		if (GameServer()->m_apPlayers[i] and not GameServer()->m_apPlayers[i]->IsVoluntarySpectator())
 		{
 			CPlayer *Player = GameServer()->m_apPlayers[i];
 			if (Player->m_Score > highest)
@@ -327,7 +332,7 @@ void CGameControllerWarioWare::doGameOver()
 	// again but get players with the same score.
 	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
-		if (GameServer()->m_apPlayers[i] and GameServer()->m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
+		if (GameServer()->m_apPlayers[i] and not GameServer()->m_apPlayers[i]->IsVoluntarySpectator())
 		{
 			CPlayer *Player = GameServer()->m_apPlayers[i];
 			if (Player->m_Score == highest)
@@ -403,7 +408,7 @@ void CGameControllerWarioWare::Tick()
 	int online = 0;
 	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
-		if (not Server()->ClientIngame(i) or GameServer()->m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS) continue;
+		if (not Server()->ClientIngame(i) or GameServer()->m_apPlayers[i]->IsVoluntarySpectator()) continue;
 		CPlayer *Player = GameServer()->m_apPlayers[i];
 		CCharacter *Char = Player->GetCharacter();
 		++online;

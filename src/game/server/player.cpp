@@ -465,7 +465,7 @@ void CPlayer::ThreadKillCharacter(int Weapon)
 
 void CPlayer::KillCharacter(int Weapon)
 {
-	if(m_pCharacter)
+	if(m_pCharacter && m_pCharacter->IsAlive())
 	{
 		m_pCharacter->Die(m_ClientID, Weapon);
 
@@ -512,9 +512,9 @@ void CPlayer::SetTeam(int Team, bool DoChatMsg)
 		Controller->m_Teams.SetForceCharacterTeam(m_ClientID, 0);
 	}
 
+	m_Team = Team;
 	KillCharacter();
 
-	m_Team = Team;
 	m_LastSetTeam = Server()->Tick();
 	m_LastActionTick = Server()->Tick();
 	m_SpectatorID = SPEC_FREEVIEW;

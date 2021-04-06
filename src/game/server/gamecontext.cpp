@@ -1548,14 +1548,16 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				else
 				{
 					//pPlayer->m_LastSetTeam = Server()->Tick();
-					if(pPlayer->GetTeam() == TEAM_SPECTATORS || pMsg->m_Team == TEAM_SPECTATORS)
-						m_VoteUpdate = true;
-					
+
 					if (Controller->isInGame() and Controller->inMicroGame() and (pPlayer->IsOut()))
 					{
 						SendChatTarget(ClientID, "Wait for the current microgame to end.");
 						return;
 					}
+
+					if(pPlayer->GetTeam() == TEAM_SPECTATORS || pMsg->m_Team == TEAM_SPECTATORS)
+						m_VoteUpdate = true;
+
 					pPlayer->setVoluntarySpectator(pMsg->m_Team == TEAM_SPECTATORS);
 
 					pPlayer->SetTeam(pMsg->m_Team);
@@ -2772,6 +2774,7 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 
 	OnClientConnected(MAX_CLIENTS-1); // need this dummy for a microgame
 	m_apPlayers[MAX_CLIENTS-1]->SetTeam(TEAM_SPECTATORS, false);
+	m_apPlayers[MAX_CLIENTS-1]->setVoluntarySpectator(true);
 	Server()->SetClientName(MAX_CLIENTS-1, "bot");
 	str_copy(m_apPlayers[MAX_CLIENTS-1]->m_TeeInfos.m_SkinName, "Bot", sizeof(m_apPlayers[MAX_CLIENTS-1]->m_TeeInfos.m_SkinName));
 }
