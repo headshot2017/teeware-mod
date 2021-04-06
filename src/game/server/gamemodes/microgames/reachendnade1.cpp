@@ -80,7 +80,7 @@ void MGReachEndNade1::Tick()
 				WEAPON_GRENADE,//Type
 				-1,//Owner
 				m_NadeSpawnEntities[rand() % m_NadeSpawnEntities.size()],//Pos
-				vec2(-0.6,0),//Dir
+				vec2(-0.4,0),//Dir
 				Lifetime,//Span
 				0,//Freeze
 				true,//Explosive
