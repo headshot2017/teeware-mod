@@ -73,7 +73,8 @@ public:
 	std::vector<int> finalWinners; // final winners
 
 private:
-	int m_state, m_warioState, m_last_microgame, m_microgame, m_round;
+	int m_state, m_warioState, m_microgame, m_round;
+	int m_last_microgame[5];
 	bool m_speedUp;
 	float warioTimeLength;
 

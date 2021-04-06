@@ -42,7 +42,8 @@ CGameControllerWarioWare::CGameControllerWarioWare(class CGameContext *pGameServ
 	InitTeleporter();
 	
 	srand(time(0));
-	m_last_microgame = m_microgame = -1;
+	m_microgame = -1;
+	for (int i=0; i<5; i++) m_last_microgame[i] = -1;
 
 	// add all microgames here
 	m_microgames.push_back(new MGKamikaze(pGameServer, this));
@@ -270,18 +271,24 @@ void CGameControllerWarioWare::rollMicroGame()
 {
 	if (g_Config.m_WwForceMicrogame < 0)
 	{
-		m_last_microgame = m_microgame;
-
 		if (m_round+1 < g_Config.m_WwMaxRounds)
 		{
 			do m_microgame = rand() % m_microgames.size();
-			while ((m_microgame == m_last_microgame and m_microgames.size() > 1) or m_microgames[m_microgame]->m_boss);
+			while (((m_microgame == m_last_microgame[0] or 
+					 m_microgame == m_last_microgame[1] or 
+					 m_microgame == m_last_microgame[2] or 
+					 m_microgame == m_last_microgame[3] or 
+					 m_microgame == m_last_microgame[4]) and m_microgames.size() > 5) or m_microgames[m_microgame]->m_boss);
 		}
 		else
 		{
 			do m_microgame = rand() % m_microgames.size();
 			while (not m_microgames[m_microgame]->m_boss);
 		}
+
+		for (int i=4; i>=1; i--)
+			m_last_microgame[i] = m_last_microgame[i-1];
+		m_last_microgame[0] = m_microgame;
 	}
 	else
 		m_microgame = g_Config.m_WwForceMicrogame;
