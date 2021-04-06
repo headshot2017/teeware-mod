@@ -41,9 +41,3 @@ void MGTrain::Tick()
 {
 	// nothing to tick
 }
-
-int MGTrain::OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon)
-{
-	Controller()->g_Complete[pVictim->GetPlayer()->GetCID()] = false;
-	return 0;
-}

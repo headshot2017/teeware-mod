@@ -18,7 +18,6 @@ public:
 	void Start();
 	void End();
 	void Tick();
-	int OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon);
 };
 
 #endif // _MICROGAME_HITENEMY_H
