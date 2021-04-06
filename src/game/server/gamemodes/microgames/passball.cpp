@@ -100,7 +100,7 @@ void MGPassBall::Start()
 				WEAPON_GRENADE//Weapon
 				);
 
-		pProj->SetFootMode(true);
+		pProj->SetFootMode(1);
 	}
 
 	m_GameOver = false;
@@ -120,18 +120,13 @@ void MGPassBall::End()
 	}
 
 	// delete stray balls again just in case...
-	CProjectile *apEnts[m_BallSpawns.size()];
-	int Num = GameServer()->m_World.FindEntities(m_SeparatorPos, 3000.f, (CEntity**)apEnts,
-											m_BallSpawns.size(), CGameWorld::ENTTYPE_PROJECTILE);
-	
-	for (int i = 0; i < Num; ++i)
+	CProjectile *p = (CProjectile *)GameServer()->m_World.FindFirst(CGameWorld::ENTTYPE_PROJECTILE);
+	for(; p; p = (CProjectile *)p->TypeNext())
 	{
-		CProjectile *pProj = apEnts[i];
-
-		if (not pProj->GetFootMode())
+		if (not p->GetFootMode())
 			continue;
 
-		GameServer()->m_World.DestroyEntity(pProj);
+		GameServer()->m_World.DestroyEntity(p);
 	}
 
 	m_LeftTeamPlayers.clear();
@@ -149,23 +144,18 @@ void MGPassBall::Tick()
 		int rightScore = 0;
 
 		// calculate score from the balls then delete them
-		CProjectile *apEnts[m_BallSpawns.size()];
-		int Num = GameServer()->m_World.FindEntities(m_SeparatorPos, 3000.f, (CEntity**)apEnts,
-												m_BallSpawns.size(), CGameWorld::ENTTYPE_PROJECTILE);
-		
-		for (int i = 0; i < Num; ++i)
+		CProjectile *p = (CProjectile *)GameServer()->m_World.FindFirst(CGameWorld::ENTTYPE_PROJECTILE);
+		for(; p; p = (CProjectile *)p->TypeNext())
 		{
-			CProjectile *pProj = apEnts[i];
-
-			if (not pProj->GetFootMode())
+			if (not p->GetFootMode())
 				continue;
 
-			if (pProj->m_Pos.x < m_SeparatorPos.x)
+			if (p->m_Pos.x < m_SeparatorPos.x)
 				leftScore++;
 			else
 				rightScore++;
 
-			GameServer()->m_World.DestroyEntity(pProj);
+			GameServer()->m_World.DestroyEntity(p);
 		}
 
 		// calculate score from players holding balls
