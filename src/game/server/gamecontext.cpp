@@ -967,7 +967,8 @@ void CGameContext::OnClientEnter(int ClientID)
 	else // prevent player from joining mid-game
 	{
 		float timeLeft = controller->getTimeLength() - controller->getTimer();
-		m_apPlayers[ClientID]->m_DieTick = Server()->Tick() + (Server()->TickSpeed() * (timeLeft/1000.f));
+		//m_apPlayers[ClientID]->m_DieTick = Server()->Tick() + (Server()->TickSpeed() * (timeLeft/1000.f));
+		m_apPlayers[ClientID]->SetTeam(TEAM_SPECTATORS, false);
 
 		char abuf[128], abuf2[128];
 
