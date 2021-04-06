@@ -69,7 +69,7 @@ void MGReachEndNade1::End()
 
 void MGReachEndNade1::Tick()
 {
-	if (Server()->Tick() % 50 == 0) // spawn a grenade
+	if (Server()->Tick() % 75 == 0) // spawn a grenade
 	{
 		// taken from character.cpp
 		int Lifetime = 60 * Server()->TickSpeed();
