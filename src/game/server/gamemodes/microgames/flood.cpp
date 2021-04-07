@@ -13,7 +13,10 @@ void MGFlood::Start()
 {
 	for (int i=0; i<MAX_CLIENTS; i++)
 	{
-		if (not GameServer()->GetPlayerChar(i)) continue;
+		CCharacter *Char = GameServer()->GetPlayerChar(i);
+		if (not Char) continue;
+
+		Char->SetCollideOthers(false); // FATTIES
 
 		Controller()->g_Complete[i] = true;
 		Controller()->teleportPlayer(i, 5);

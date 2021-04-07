@@ -15,7 +15,8 @@ void MGHitCow::Start()
 	{
 		CCharacter *Char = GameServer()->GetPlayerChar(i);
 		if (not Char) continue;
-		
+
+		Char->SetCollideOthers(false); // FATTIES
 		Controller()->teleportPlayer(i, 9);
 	}
 
