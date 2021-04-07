@@ -255,7 +255,7 @@ void CGameControllerWarioWare::nextWarioState()
 void CGameControllerWarioWare::onMicroGameEnd()
 {
 	m_microgames[m_microgame]->End();
-	for (int i=0; i<MAX_CLIENTS; i++)
+	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
 		CPlayer *Player = GameServer()->m_apPlayers[i];
 		CCharacter *Char = GameServer()->GetPlayerChar(i);
