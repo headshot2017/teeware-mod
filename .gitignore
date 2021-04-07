@@ -48,5 +48,6 @@ bam.exe
 *.opensdf
 *.pyc
 *.dll
+*.coff
 
 DDNet*
