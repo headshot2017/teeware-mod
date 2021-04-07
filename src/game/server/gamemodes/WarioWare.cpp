@@ -151,9 +151,10 @@ void CGameControllerWarioWare::teleportPlayer(int client, int tele_id)
 
 void CGameControllerWarioWare::teleportPlayerToSpawn(int client)
 {
-	CPlayer *Player = GameServer()->m_apPlayers[client];
-	CCharacter *Char = Player->GetCharacter();
-	
+	CPlayer *Player = GameServer()->GetPlayerChar(client);
+	CCharacter *Char = (Player) ? Player->GetCharacter() : 0;
+	if (not Char) return;
+
 	vec2 SpawnPos;
 	if(CanSpawn(Player->GetTeam(), &SpawnPos))
 	{

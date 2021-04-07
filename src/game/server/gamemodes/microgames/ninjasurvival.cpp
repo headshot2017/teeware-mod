@@ -71,6 +71,7 @@ void MGNinjaSurvival::OnCharacterDamage(int Victim, int Killer, int Dmg, int Wea
 	{
 		CCharacter *pVictim = GameServer()->GetPlayerChar(Victim);
 		CCharacter *pKiller = GameServer()->GetPlayerChar(Killer);
+		if (not pVictim or not pKiller) return;
 
 		pVictim->SetHealth(pVictim->GetHealth() - Dmg);
 
