@@ -17,7 +17,6 @@ void MGParachute::Start()
 		if (not Char) continue;
 
 		Char->SetHookOthers(false);
-		Char->SetHitOthers(false);
 		Char->SetCollideOthers(false);
 		Char->Core()->m_Jumped = 0; // reset double jump just in case...
 		Controller()->teleportPlayer(i, 4);
