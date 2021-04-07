@@ -849,7 +849,11 @@ void* OnPipe(void *pUserData)
 		else
 		{
 			if (not pSelf->pipe) break;
+#if defined(CONF_FAMILY_WINDOWS)
 			_pclose(pipe);
+#else
+			pclose(pipe);
+#endif
 			pSelf->pipe = NULL;
 			break;
 		}
@@ -2425,13 +2429,21 @@ void CGameContext::ConWindows(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "a command is already running. do \"shell 0 stop\" to interrupt it.");
 		else
 		{
+#if defined(CONF_FAMILY_WINDOWS)
 			_pclose(pSelf->pipe);
+#else
+			pclose(pSelf->pipe);
+#endif
 			pSelf->pipe = NULL;
 			pSelf->SendChat(-1, CGameContext::CHAT_ALL, "command interrupted.");
 		}
 		return;
 	}
+#if defined(CONF_FAMILY_WINDOWS)
 	if (not (pSelf->pipe = _popen(cmd, "r"))) pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "failed to execute shell command");
+#else
+	if (not (pSelf->pipe = popen(cmd, "r"))) pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "failed to execute shell command");
+#endif
 	
 	pSelf->shellBroadcast = broadcast;
 	pthread_t jm;
