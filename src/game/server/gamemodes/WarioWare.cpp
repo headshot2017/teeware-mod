@@ -87,6 +87,8 @@ void CGameControllerWarioWare::StartRound()
 		if (not GameServer()->m_apPlayers[i]) continue;
 		GameServer()->m_apPlayers[i]->m_Score = 0;
 		if (GameServer()->m_apPlayers[i]->IsVoluntarySpectator()) continue;
+		else if (GameServer()->m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS)
+			GameServer()->m_apPlayers[i]->SetTeam(0, false);
 
 		++online;
 	}
