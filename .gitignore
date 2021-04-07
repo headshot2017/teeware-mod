@@ -6,21 +6,6 @@ datasrc/*.pyc
 objs
 src/game/generated
 
-crapnet*
-config_store*
-config_retrieve*
-dilate*
-fake_server*
-map_resave*
-map_version*
-mastersrv*
-packetgen*
-teeworlds*
-teeworlds_srv*
-tileset_border*
-twping*
-versionsrv*
-
 Debug
 bam
 buildlog.txt
