@@ -16,10 +16,9 @@ void MGKamikaze::Start()
 	while (not GameServer()->m_apPlayers[m_Victim] or GameServer()->m_apPlayers[m_Victim]->GetTeam() == TEAM_SPECTATORS);
 
 	// change their skin to a bomb
-	CPlayer *pPlayer = GameServer()->m_apPlayers[m_Victim];
-	pPlayer->SetInfoLock(true); // prevent them from changing skins
-	str_copy(pPlayer->m_TeeInfos.m_SkinName, "bomb", sizeof(pPlayer->m_TeeInfos.m_SkinName));
-	pPlayer->m_TeeInfos.m_UseCustomColor = 0;
+	CPlayer *pKamikaze = GameServer()->m_apPlayers[m_Victim];
+	str_copy(pKamikaze->m_TeeInfos.m_SkinName, "bomb", sizeof(pKamikaze->m_TeeInfos.m_SkinName));
+	pKamikaze->m_TeeInfos.m_UseCustomColor = 0;
 
 	// count online players and send broadcast
 	int online = 0;
@@ -28,8 +27,14 @@ void MGKamikaze::Start()
 		if (not GameServer()->m_apPlayers[i] or GameServer()->m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS) continue;
 		online++;
 
+		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+		pPlayer->SetInfoLock(true); // prevent them from changing skins
+
 		if (i != m_Victim)
 		{
+			if (str_comp(pPlayer->m_TeeInfos.m_SkinName, "bomb") == 0) // remove fake
+				str_copy(pPlayer->m_TeeInfos.m_SkinName, "default", sizeof(pPlayer->m_TeeInfos.m_SkinName));
+
 			Controller()->g_Complete[i] = true;
 			GameServer()->SendBroadcast("Avoid the kamikaze!", i);
 		}
@@ -46,12 +51,15 @@ void MGKamikaze::Start()
 
 void MGKamikaze::End()
 {
-	CPlayer *Player = GameServer()->m_apPlayers[m_Victim];
-	if (Player) // revert skin
+	for (int i=0; i<MAX_CLIENTS; i++)
 	{
-		Player->SetInfoLock(false);
-		str_copy(Player->m_TeeInfos.m_SkinName, Player->original_skin, sizeof(Player->m_TeeInfos.m_SkinName));
-		Player->m_TeeInfos.m_UseCustomColor = Player->original_color;
+		CPlayer *Player = GameServer()->m_apPlayers[i];
+		if (Player) // revert skin
+		{
+			Player->SetInfoLock(false);
+			str_copy(Player->m_TeeInfos.m_SkinName, Player->original_skin, sizeof(Player->m_TeeInfos.m_SkinName));
+			Player->m_TeeInfos.m_UseCustomColor = Player->original_color;
+		}
 	}
 }
 

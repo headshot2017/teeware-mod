@@ -13,8 +13,15 @@ void MGHitCow::Start()
 {
 	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
-		CCharacter *Char = GameServer()->GetPlayerChar(i);
+		CPlayer *Player = GameServer()->m_apPlayers[i];
+		CCharacter *Char = (Player) ? Player->GetCharacter() : 0;
 		if (not Char) continue;
+
+		Player->SetInfoLock(true); // prevent skin change
+		if (str_comp(Player->m_TeeInfos.m_SkinName, "giraffe") == 0) // remove fake
+			str_copy(Player->m_TeeInfos.m_SkinName, "default", sizeof(Player->m_TeeInfos.m_SkinName));
+		if (str_comp_nocase(Server()->ClientName(i), "cow") == 0) // remove fake
+			Server()->SetClientName(i, "fake");
 
 		Char->SetCollideOthers(false); // FATTIES
 		Controller()->teleportPlayer(i, 9);
@@ -42,9 +49,14 @@ void MGHitCow::End()
 {
 	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
-		CCharacter *Char = GameServer()->GetPlayerChar(i);
-		if (not Char) continue;
+		CPlayer *Player = GameServer()->m_apPlayers[i];
+		CCharacter *Char = (Player) ? Player->GetCharacter() : 0;
 
+		if (not Player) continue;
+		Player->SetInfoLock(false);
+		str_copy(Player->m_TeeInfos.m_SkinName, Player->original_skin, sizeof(Player->m_TeeInfos.m_SkinName));
+
+		if (not Char) continue;
 		Controller()->teleportPlayerToSpawn(i);
 	}
 
