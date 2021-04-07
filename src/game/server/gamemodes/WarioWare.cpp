@@ -263,7 +263,7 @@ void CGameControllerWarioWare::onMicroGameEnd()
 		if (Player and Player->IsOut())
 		{
 			Player->SetTeam(0, false);
-			Player->TryRespawn();
+			if (not Char) Player->TryRespawn();
 		}
 
 		if (not Char) continue;
