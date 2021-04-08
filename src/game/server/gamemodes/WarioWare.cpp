@@ -192,10 +192,10 @@ void CGameControllerWarioWare::nextWarioState()
 
 			for (int i=0; i<MAX_CLIENTS-1; i++)
 			{
-				GameServer()->SendBroadcast((g_Complete[i]) ? "You win!" : "You failed...", i);
+				if (not GameServer()->m_apPlayers[i]) continue;
 
+				GameServer()->SendBroadcast((g_Complete[i]) ? "You win!" : "You failed...", i);
 				CCharacter *Char = GameServer()->GetPlayerChar(i);
-				if (not Char) continue;
 
 				if (g_Complete[i])
 				{
