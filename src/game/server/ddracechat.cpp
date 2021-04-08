@@ -313,69 +313,12 @@ void CGameContext::ConRules(IConsole::IResult *pResult, void *pUserData)
 
 void CGameContext::ConToggleSpec(IConsole::IResult *pResult, void *pUserData)
 {
-	CGameContext *pSelf = (CGameContext *) pUserData;
-	if (!CheckClientID(pResult->m_ClientID))
-		return;
-	char aBuf[128];
-
-	if(!g_Config.m_SvPauseable)
-	{
-		ConTogglePause(pResult, pUserData);
-		return;
-	}
-
-	CPlayer *pPlayer = pSelf->m_apPlayers[pResult->m_ClientID];
-	if (!pPlayer)
-		return;
-
-	if (pPlayer->GetCharacter() == 0)
-	{
-	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "spec",
-	"You can't spec while you are dead/a spectator.");
-	return;
-	}
-	if (pPlayer->m_Paused == CPlayer::PAUSED_SPEC && g_Config.m_SvPauseable)
-	{
-		ConTogglePause(pResult, pUserData);
-		return;
-	}
-
-	if (pPlayer->m_Paused == CPlayer::PAUSED_FORCE)
-	{
-		str_format(aBuf, sizeof(aBuf), "You are force-specced. %ds left.", pPlayer->m_ForcePauseTime/pSelf->Server()->TickSpeed());
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "spec", aBuf);
-		return;
-	}
-
-	pPlayer->m_Paused = (pPlayer->m_Paused == CPlayer::PAUSED_PAUSED) ? CPlayer::PAUSED_NONE : CPlayer::PAUSED_PAUSED;
+	// zooz
 }
 
 void CGameContext::ConTogglePause(IConsole::IResult *pResult, void *pUserData)
 {
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	if(!CheckClientID(pResult->m_ClientID)) return;
-	char aBuf[128];
-
-	CPlayer *pPlayer = pSelf->m_apPlayers[pResult->m_ClientID];
-	if(!pPlayer)
-		return;
-
-	if (pPlayer->GetCharacter() == 0)
-	{
-	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "pause",
-	"You can't pause while you are dead/a spectator.");
-	return;
-	}
-
-	if(pPlayer->m_Paused == CPlayer::PAUSED_FORCE)
-	{
-		str_format(aBuf, sizeof(aBuf), "You are force-paused. %ds left.", pPlayer->m_ForcePauseTime/pSelf->Server()->TickSpeed());
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "pause", aBuf);
-		return;
-	}
-
-	pPlayer->m_Paused = (pPlayer->m_Paused == CPlayer::PAUSED_SPEC) ? CPlayer::PAUSED_NONE : CPlayer::PAUSED_SPEC;
-}
+	// zooz
 
 void CGameContext::ConTeamTop5(IConsole::IResult *pResult, void *pUserData)
 {
@@ -985,18 +928,7 @@ void CGameContext::ConShowOthers(IConsole::IResult *pResult, void *pUserData)
 
 void CGameContext::ConShowAll(IConsole::IResult *pResult, void *pUserData)
 {
-	CGameContext *pSelf = (CGameContext *) pUserData;
-	if (!CheckClientID(pResult->m_ClientID))
-		return;
-
-	CPlayer *pPlayer = pSelf->m_apPlayers[pResult->m_ClientID];
-	if (!pPlayer)
-		return;
-
-	if (pResult->NumArguments())
-		pPlayer->m_ShowAll = pResult->GetInteger(0);
-	else
-		pPlayer->m_ShowAll = !pPlayer->m_ShowAll;
+	// zooz
 }
 
 void CGameContext::ConSpecTeam(IConsole::IResult *pResult, void *pUserData)
