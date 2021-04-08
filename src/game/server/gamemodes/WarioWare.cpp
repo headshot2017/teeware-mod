@@ -344,8 +344,7 @@ void CGameControllerWarioWare::doGameOver()
 				Player->GetCharacter()->setTimer(g_Config.m_WwSndFinalWin_Offset);
 		}
 	}
-	
-	GameServer()->SendBroadcast("", -1);
+
 	char aBuf[128];
 
 	std::string winStr;
@@ -364,7 +363,7 @@ void CGameControllerWarioWare::doGameOver()
 
 	str_format(aBuf, sizeof(aBuf), "%s%s!", winStr.c_str(), (finalWinners.size() > 1) ? "win" : "wins");
 
-	GameServer()->SendChat(-1, CGameContext::CHAT_ALL, aBuf);
+	GameServer()->SendBroadcast(aBuf, -1);
 	m_warioState = WW_GAMEOVER;
 }
 
