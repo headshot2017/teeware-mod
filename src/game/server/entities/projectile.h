@@ -44,6 +44,7 @@ private:
 	int m_Weapon;
 	float m_Force;
 	int m_StartTick;
+	int m_CreationTick; // real starttick
 	bool m_Explosive;
 
 	// DDRace

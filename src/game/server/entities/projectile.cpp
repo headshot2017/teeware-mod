@@ -35,7 +35,7 @@ CProjectile::CProjectile
 	//m_Damage = Damage;
 	m_SoundImpact = SoundImpact;
 	m_Weapon = Weapon;
-	m_StartTick = Server()->Tick();
+	m_StartTick = m_CreationTick = Server()->Tick();
 	m_Explosive = Explosive;
 
 	m_Layer = Layer;
@@ -121,6 +121,7 @@ void CProjectile::Tick()
 		float PreviousTick = (Server()->Tick()-m_StartTick-1)/(float)Server()->TickSpeed();
 		float CurrentTick = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 		float NextTick = (Server()->Tick()-m_StartTick+1)/(float)Server()->TickSpeed();
+		float TimeAlive = (Server()->Tick()-m_CreationTick)/(float)Server()->TickSpeed();
 
 		vec2 CurPosition = GetPos(CurrentTick);
 		vec2 PrevPosition = GetPos(PreviousTick);
@@ -249,7 +250,7 @@ void CProjectile::Tick()
 				TChar->SetActiveWeapon(WEAPON_GRENADE); // again just in case
 				GameServer()->m_World.DestroyEntity(this);
 			}
-			else if (m_FootMode == 2 and CurrentTick > 1.25f) // explode (avoid spawnkill by waiting 1.25sec beforehand)
+			else if (m_FootMode == 2 and TimeAlive > 1.25f) // explode (avoid spawnkill by waiting 1.25sec beforehand)
 			{
 				GameServer()->CreateExplosion(CurPosition, m_Owner, m_Weapon, m_Owner == -1, (!TChar ? -1 : TChar->Team()), -1LL);
 				GameServer()->CreateSound(CurPosition, m_SoundImpact, -1LL);
