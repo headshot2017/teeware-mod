@@ -246,6 +246,7 @@ void CProjectile::Tick()
 			{
 				TChar->GiveWeapon(WEAPON_GRENADE, -1);
 				TChar->SetWeapon(WEAPON_GRENADE);
+				TChar->SetActiveWeapon(WEAPON_GRENADE); // again just in case
 				GameServer()->m_World.DestroyEntity(this);
 			}
 			else if (m_FootMode == 2) // explode
