@@ -249,7 +249,7 @@ void CProjectile::Tick()
 				TChar->SetActiveWeapon(WEAPON_GRENADE); // again just in case
 				GameServer()->m_World.DestroyEntity(this);
 			}
-			else if (m_FootMode == 2) // explode
+			else if (m_FootMode == 2 and CurrentTick > 1.25f) // explode (avoid spawnkill by waiting 1.25sec beforehand)
 			{
 				GameServer()->CreateExplosion(CurPosition, m_Owner, m_Weapon, m_Owner == -1, (!TChar ? -1 : TChar->Team()), -1LL);
 				GameServer()->CreateSound(CurPosition, m_SoundImpact, -1LL);
