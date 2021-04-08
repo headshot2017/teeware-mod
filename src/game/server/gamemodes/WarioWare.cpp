@@ -118,10 +118,13 @@ void CGameControllerWarioWare::setPlayerTimers(float offset, float length)
 {
 	for (int i=0; i<MAX_CLIENTS; i++)
 	{
-		if (not GameServer()->m_apPlayers[i] or not GameServer()->m_apPlayers[i]->GetCharacter()) continue;
+		if (not GameServer()->m_apPlayers[i]) continue;
 		CCharacter *Char = GameServer()->m_apPlayers[i]->GetCharacter();
-		
-		Char->setTimer(offset-60);
+
+		if (Char)
+			Char->setTimer(offset-60);
+		else
+			GameServer()->m_apPlayers[i]->SetSpawnTimer(offset-60);
 	}
 	
 	setTimer(offset-60);
@@ -201,6 +204,7 @@ void CGameControllerWarioWare::nextWarioState()
 				{
 					GameServer()->m_apPlayers[i]->m_Score += (m_round == g_Config.m_WwMaxRounds) ? 5 : 1;
 					if (Char) Char->setTimer((not m_speedUp) ? g_Config.m_WwSndWin_Offset : g_Config.m_WwSndWinFast_Offset);
+					else GameServer()->m_apPlayers[i]->SetSpawnTimer((not m_speedUp) ? g_Config.m_WwSndWin_Offset : g_Config.m_WwSndWinFast_Offset);
 				}
 			}
 			m_warioState = WW_WINLOSE;

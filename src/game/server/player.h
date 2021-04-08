@@ -116,6 +116,8 @@ public:
 	// headbot
 	char original_skin[64];
 	int original_color;
+	bool m_SetTimerOnSpawn; // if to set timer to m_TimerToSpawn when character spawns
+	float m_TimerToSpawn; // set ddrace timer to this value when character spawns
 
 private:
 	CCharacter *m_pCharacter;
@@ -191,6 +193,7 @@ public:
 	void setVoluntarySpectator(bool on) { m_voluntarySpectator = on; }
 	bool InfoLocked() const { return m_LockInfo; }
 	void SetInfoLock(bool on) { m_LockInfo = on; }
+	void SetSpawnTimer(float val) { m_SetTimerOnSpawn = true; m_TimerToSpawn = val; }
 	
 #if defined(CONF_SQL)
 	int64 m_LastSQLQuery;

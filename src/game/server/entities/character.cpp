@@ -74,6 +74,11 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	Server()->StartRecord(m_pPlayer->GetCID());
 	
 	warioTimeOffset = warioTimeLength = 0;
+	if (m_pPlayer->m_SetTimerOnSpawn)
+	{
+		setTimer(m_pPlayer->m_TimerToSpawn);
+		m_pPlayer->m_SetTimerOnSpawn = false;
+	}
 
 	return true;
 }

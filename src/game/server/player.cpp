@@ -28,6 +28,8 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_NumInputs = 0;
 	m_KillMe = 0;
 	m_LockInfo = false;
+	m_TimerToSpawn = -1.f;
+	m_SetTimerOnSpawn = false;
 	Reset();
 }
 
