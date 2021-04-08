@@ -195,7 +195,7 @@ void CGameControllerWarioWare::nextWarioState()
 
 			for (int i=0; i<MAX_CLIENTS-1; i++)
 			{
-				if (not GameServer()->m_apPlayers[i]) continue;
+				if (not GameServer()->m_apPlayers[i] or GameServer()->m_apPlayers[i]->IsVoluntarySpectator()) continue;
 
 				GameServer()->SendBroadcast((g_Complete[i]) ? "You win!" : "You failed...", i);
 				CCharacter *Char = GameServer()->GetPlayerChar(i);
