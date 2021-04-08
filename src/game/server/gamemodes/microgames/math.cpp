@@ -21,8 +21,8 @@ void MGMath::Start()
 	}
 	else if (m_operation == '-')
 	{
-		m_num1 = rand() % 20;
-		do m_num2 = 1 + (rand() % 10);
+		m_num1 = rand() % 19 + 1;
+		do m_num2 = rand() % 10 + 1;
 		while (m_num2 > m_num1);
 	}
 	else
