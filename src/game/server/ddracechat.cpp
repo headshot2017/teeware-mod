@@ -319,6 +319,7 @@ void CGameContext::ConToggleSpec(IConsole::IResult *pResult, void *pUserData)
 void CGameContext::ConTogglePause(IConsole::IResult *pResult, void *pUserData)
 {
 	// zooz
+}
 
 void CGameContext::ConTeamTop5(IConsole::IResult *pResult, void *pUserData)
 {
