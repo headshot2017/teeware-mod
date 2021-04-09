@@ -1007,7 +1007,7 @@ void CGameContext::OnClientEnter(int ClientID)
 		str_copy(m_apPlayers[ClientID]->original_skin, m_apPlayers[ClientID]->m_TeeInfos.m_SkinName, sizeof(m_apPlayers[ClientID]->original_skin));
 		m_apPlayers[ClientID]->original_color = m_apPlayers[ClientID]->m_TeeInfos.m_UseCustomColor;
 
-		SendChatTarget(ClientID, "TeeWare mod by Headshot");
+		SendChatTarget(ClientID, "TeeWare v1.1 mod by Headshot");
 
 		if(g_Config.m_SvWelcome[0]!=0)
 			SendChatTarget(ClientID,g_Config.m_SvWelcome);
