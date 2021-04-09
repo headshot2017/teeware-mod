@@ -22,7 +22,7 @@ void MGFlood::Start()
 		Controller()->teleportPlayer(i, 5);
 	}
 	
-	GameServer()->SendBroadcast("Get on a platform!", -1);
+	GameServer()->SendBroadcast("Don't touch the acid!", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgGetOnPlatform_Offset, g_Config.m_WwSndMgGetOnPlatform_Length);
 }
 
