@@ -24,6 +24,7 @@ void MGHitCow::Start()
 			Server()->SetClientName(i, "fake");
 
 		Char->SetCollideOthers(false); // FATTIES
+		Char->SetHookOthers(false); // trolls batting the cow away
 		Controller()->teleportPlayer(i, 9);
 	}
 
