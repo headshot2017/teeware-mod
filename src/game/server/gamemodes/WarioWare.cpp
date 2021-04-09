@@ -313,10 +313,10 @@ void CGameControllerWarioWare::rollMicroGame()
 		++online;
 	}
 
-	m_microgames[m_microgame]->Start();
 	char aBuf[128];
 	str_format(aBuf, sizeof(aBuf), "round %d: '%s'", m_round+1, m_microgames[m_microgame]->m_microgameName);
 	GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "TeeWare", aBuf);
+	m_microgames[m_microgame]->Start();
 }
 
 void CGameControllerWarioWare::doGameOver()
