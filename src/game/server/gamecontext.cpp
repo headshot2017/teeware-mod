@@ -1554,7 +1554,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				{
 					//pPlayer->m_LastSetTeam = Server()->Tick();
 
-					if (Controller->isInGame() and Controller->inMicroGame() and (pPlayer->IsOut()))
+					if (Controller->isInGame() and Controller->inMicroGame() and (pPlayer->GetTeam() == TEAM_SPECTATORS))
 					{
 						SendChatTarget(ClientID, "Wait for the current microgame to end.");
 						return;
