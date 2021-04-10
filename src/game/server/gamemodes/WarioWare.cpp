@@ -144,7 +144,7 @@ void CGameControllerWarioWare::teleportPlayer(int client, int tele_id)
 		return;
 	}
 	vec2 outPos = m_TeleOuts[tele_id-1][(!Num)?Num:rand() % Num];
-	Char->Core()->m_Pos = outPos;
+	Char->m_Pos = Char->Core()->m_Pos = Char->m_PrevPos = outPos;
 
 	Char->Core()->m_HookedPlayer = -1;
 	Char->Core()->m_HookState = HOOK_RETRACTED;
