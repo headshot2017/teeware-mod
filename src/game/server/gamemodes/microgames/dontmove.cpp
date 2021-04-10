@@ -17,7 +17,15 @@ void MGDontMove::Start()
 	m_Mode = rand() % 2;			
 	GameServer()->SendBroadcast(modes[m_Mode], -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgDontMove_Offset, g_Config.m_WwSndMgDontMove_Length);
-	for (int i=0; i<MAX_CLIENTS; i++) Controller()->g_Complete[i] = true;
+	for (int i=0; i<MAX_CLIENTS; i++)
+	{
+		CCharacter *Char = GameServer()->GetPlayerChar(i);
+		if (not Char) continue;
+
+		Controller()->g_Complete[i] = true;
+		Char->SetCollideOthers(false);
+		Char->SetHookOthers(false);
+	}
 }
 
 void MGDontMove::End()
