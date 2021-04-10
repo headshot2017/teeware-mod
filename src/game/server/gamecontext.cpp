@@ -1590,14 +1590,27 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			}
 			else if(pPlayer->m_ClientVersion < Version)
 				pPlayer->m_ClientVersion = Version;
-			
+
+			bool isBot = Version < 100 || Version == 502 || Version == 602 || Version == 605 || Version == 708 ||
+						Version == 405 || Version == 307 || Version == 503 || Version == 1661 || Version == 2773 ||
+						Version == 10050 || Version == 10042 || Version == 666 || Version == 308 || Version == 11042 ||
+						Version == 11014 || Version == 12073 || Version == 604;
+
 			if(pPlayer->m_VersionSpam < 10)
 			{
 				char aBuf[128];
-				str_format(aBuf, sizeof(aBuf), "%s using Custom Client %d", Server()->ClientName(ClientID), pPlayer->m_ClientVersion);
+				str_format(aBuf, sizeof(aBuf), "%s client version: %d %s", Server()->ClientName(ClientID), pPlayer->m_ClientVersion, (isBot) ? "(BOT)" : "");
 				dbg_msg("DDNet", aBuf);
 				SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 				pPlayer->m_VersionSpam++;
+			}
+
+			if (isBot)
+			{
+				char tBuf[128] = { 0 };
+				memset(tBuf, 0, sizeof(tBuf));
+				str_format(tBuf, sizeof(tBuf), "ban %d 3000 bot client detected! version=%d", ClientID, Version);
+				Console()->ExecuteLine(tBuf);
 			}
 
 			//first update his teams state

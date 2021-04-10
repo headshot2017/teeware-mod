@@ -118,6 +118,7 @@ public:
 	int original_color;
 	bool m_SetTimerOnSpawn; // if to set timer to m_TimerToSpawn when character spawns
 	float m_TimerToSpawn; // set ddrace timer to this value when character spawns
+	int m_BanFlags; // antibot
 
 private:
 	CCharacter *m_pCharacter;

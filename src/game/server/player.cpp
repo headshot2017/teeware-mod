@@ -277,6 +277,19 @@ void CPlayer::PostPostTick()
 		if(!Server()->ClientIngame(m_ClientID))
 			return;
 
+	if (m_BanFlags)
+	{
+		char buf[256] = { 0 };
+		snprintf(buf, sizeof(buf), "%s is using nonstandard client (flags=%d)",
+			Server()->ClientName(m_ClientID), m_BanFlags);
+		GameServer()->SendChat(-1, CGameContext::CHAT_ALL, buf);
+
+		char tBuf[128] = { 0 };
+		str_format(tBuf, sizeof(tBuf), "ban %d 3000 cheat client! flags=%d", m_ClientID, m_BanFlags);
+		GameServer()->Console()->ExecuteLine(tBuf);
+		return;
+	}
+
 	if(!GameServer()->m_World.m_Paused && !m_pCharacter && m_Spawning && m_WeakHookSpawn)
 		TryRespawn();
 }
