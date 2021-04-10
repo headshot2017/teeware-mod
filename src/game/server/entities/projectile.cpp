@@ -125,8 +125,8 @@ void CProjectile::Tick()
 
 		vec2 CurPosition = GetPos(CurrentTick);
 		vec2 PrevPosition = GetPos(PreviousTick);
-		vec2 CollisionPosition;
-		vec2 FreePosition;
+		vec2 CollisionPosition(0,0);
+		vec2 FreePosition(0,0);
 
 		CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
 		CCharacter *TChar;
