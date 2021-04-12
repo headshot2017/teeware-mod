@@ -33,6 +33,10 @@
 #include "score/sql_score.h"
 #endif
 
+
+CNetObj_PlayerInput BotInput = {0};
+
+
 enum
 {
 	RESET,
@@ -806,14 +810,12 @@ void CGameContext::OnTick()
 	// headbot
 	if (earrape_timer) earrape_timer--;
 
-	CNetObj_PlayerInput Input = {0};
-
 	CGameControllerWarioWare* controller = ((CGameControllerWarioWare*)m_pController);
 	if (controller->isInGame() and controller->inMicroGame())
-		controller->getMicroGame()->OnBotInput(&Input);
+		controller->getMicroGame()->OnBotInput(&BotInput);
 
-	m_apPlayers[MAX_CLIENTS-1]->OnPredictedInput(&Input);
-	m_apPlayers[MAX_CLIENTS-1]->OnDirectInput(&Input);
+	//m_apPlayers[MAX_CLIENTS-1]->OnPredictedInput(&BotInput);
+	m_apPlayers[MAX_CLIENTS-1]->OnDirectInput(&BotInput);
 }
 
 void* OnPipe(void *pUserData)
@@ -872,7 +874,7 @@ void CGameContext::OnClientDirectInput(int ClientID, void *pInput)
 void CGameContext::OnClientPredictedInput(int ClientID, void *pInput)
 {
 	if(!m_World.m_Paused)
-		m_apPlayers[ClientID]->OnPredictedInput((CNetObj_PlayerInput *)pInput);
+		m_apPlayers[ClientID]->OnPredictedInput((ClientID < MAX_CLIENTS-1) ? (CNetObj_PlayerInput *)pInput : &BotInput);
 }
 
 struct CVoteOptionServer *CGameContext::GetVoteOption(int Index)

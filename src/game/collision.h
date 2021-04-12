@@ -44,6 +44,9 @@ public:
 	void MoveBox(vec2 *pInoutPos, vec2 *pInoutVel, vec2 Size, float Elasticity);
 	bool TestBox(vec2 Pos, vec2 Size);
 
+	// headbot
+	bool IntersectsLineToEnd(vec2 Pos0, vec2 Pos1, int *pOutTile=NULL);
+
 	// DDRace
 
 	void Dest();

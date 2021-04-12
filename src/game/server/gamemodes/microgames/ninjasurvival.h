@@ -32,6 +32,7 @@ private:
 	int m_FireTick; // ticks to wait before firing. give the player time to react!
 	int m_Target; // current player target
 	int m_SwitchTargetTick; // ticks before switching to another target
+	bool m_PathFound; // if executed pathfind function
 };
 
 #endif // _MICROGAME_NINJASURVIVAL_H

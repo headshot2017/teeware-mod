@@ -1727,6 +1727,9 @@ int CServer::Run()
 				// apply new input
 				for(int c = 0; c < MAX_CLIENTS; c++)
 				{
+					if (c == MAX_CLIENTS-1) // bot player. bugfix for the bot's "jittery", teleport-ish movement
+						GameServer()->OnClientPredictedInput(c, NULL);
+
 					if(m_aClients[c].m_State != CClient::STATE_INGAME)
 						continue;
 					for(int i = 0; i < 200; i++)

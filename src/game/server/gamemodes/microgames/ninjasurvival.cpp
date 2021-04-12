@@ -1,6 +1,7 @@
 // WarioWare mod by Headshotnoby
 
 #include <engine/shared/config.h>
+#include <game/server/faketee.h>
 #include "ninjasurvival.h"
 
 MGNinjaSurvival::MGNinjaSurvival(CGameContext* pGameServer, CGameControllerWarioWare* pController) : Microgame(pGameServer, pController)
@@ -12,6 +13,7 @@ MGNinjaSurvival::MGNinjaSurvival(CGameContext* pGameServer, CGameControllerWario
 void MGNinjaSurvival::Start()
 {
 	m_Moved = false;
+	m_PathFound = false;
 	m_startTick = Server()->Tick();
 
 	for (int i=0; i<MAX_CLIENTS-1; i++)
@@ -119,6 +121,7 @@ void MGNinjaSurvival::OnBotInput(CNetObj_PlayerInput* Input)
 	if (m_SwitchTargetTick <= 0 or not Target)
 	{
 		int loops = 0;
+		m_PathFound = false;
 		do
 		{
 			m_Target = rand() % MAX_CLIENTS-1;
@@ -139,27 +142,42 @@ void MGNinjaSurvival::OnBotInput(CNetObj_PlayerInput* Input)
 			return;
 		}
 
-		m_SwitchTargetTick = 125; // 2.5 secs
+		m_SwitchTargetTick = 175; // 3.5 secs
 	}
 
 	m_SwitchTargetTick--;
 
 	bool Wall = (GameServer()->Collision()->IntersectLine(Bot->m_Pos, Target->m_Pos, NULL, NULL, false) != 0);
 	int dirX = sign(Target->m_Pos.x - Bot->m_Pos.x);
-	int dirY = sign(Target->m_Pos.y - Bot->m_Pos.y);
+	//int dirY = sign(Target->m_Pos.y - Bot->m_Pos.y);
 
-	Input->m_Direction = (Wall) ? -dirX : dirX;
-	Input->m_TargetX = Target->m_Pos.x - Bot->m_Pos.x;
-	Input->m_TargetY = Target->m_Pos.y - Bot->m_Pos.y;
-
-	Input->m_Jump = (Wall and dirY < 0 and ((int)(Bot->Core()->m_Vel.y) == 0 or Bot->IsGrounded())) ? 1 : 0;
-
-	m_FireTick = (Wall) ? 25 : m_FireTick-1;
-	if (m_FireTick <= 0)
+	if (not Wall)
 	{
-		Input->m_Fire = 1;
-		m_FireTick = 40;
+		m_PathFound = false;
+		Input->m_Hook = 0;
+		Input->m_Direction = dirX;
+		Input->m_TargetX = Target->m_Pos.x - Bot->m_Pos.x;
+		Input->m_TargetY = Target->m_Pos.y - Bot->m_Pos.y;
+
+		m_FireTick = (Wall) ? 25 : m_FireTick-1;
+		if (m_FireTick <= 0)
+		{
+			Input->m_Fire = 1;
+			m_FireTick = 40;
+		}
+		else
+			Input->m_Fire = 0;
 	}
 	else
-		Input->m_Fire = 0;
+	{
+		if (not m_PathFound)
+		{
+			FakeTee::pathFind(GameServer(), 0, Target->m_Pos);
+			m_PathFound = true;
+		}
+		else
+		{
+			FakeTee::pathFindMove(GameServer(), 0, Input);
+		}
+	}
 }

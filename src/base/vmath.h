@@ -40,6 +40,7 @@ public:
 
 	bool operator ==(const vector2_base &v) const { return x == v.x && y == v.y; } //TODO: do this with an eps instead
 	bool operator !=(const vector2_base &v) const { return x != v.x || y != v.y; }
+	bool operator < (const vector2_base &v) const { return x < v.x || (x == v.x && y < v.y); }
 
 	operator const T* () { return &x; }
 };

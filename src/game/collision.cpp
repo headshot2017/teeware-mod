@@ -344,6 +344,35 @@ int CCollision::IntersectLineTeleWeapon(vec2 Pos0, vec2 Pos1, vec2 *pOutCollisio
 	return 0;
 }
 
+// headbot
+bool CCollision::IntersectsLineToEnd(vec2 Pos0, vec2 Pos1, int *pOutTile)
+{
+	float Distance = distance(Pos0, Pos1);
+	int End(Distance + 1);
+	vec2 Last = Pos0;
+	int ix = 0, iy = 0; // Temporary position for checking collision
+	for(int i = 0; i <= End; i++)
+	{
+		float a = i / (float)End;
+		vec2 Pos = mix(Pos0, Pos1, a);
+		ix = round_to_int(Pos.x);
+		iy = round_to_int(Pos.y);
+
+		if(CheckPoint(ix, iy))
+		{
+			if(pOutTile)
+				*pOutTile = GetCollisionAt(ix, iy);
+			return i >= End-58;
+		}
+
+		Last = Pos;
+	}
+	if(pOutTile)
+		*pOutTile = 0;
+	return true;
+}
+
+
 // TODO: OPT: rewrite this smarter!
 void CCollision::MovePoint(vec2 *pInoutPos, vec2 *pInoutVel, float Elasticity, int *pBounces)
 {
