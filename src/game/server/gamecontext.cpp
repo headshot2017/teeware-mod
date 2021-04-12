@@ -2805,6 +2805,8 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	m_apPlayers[MAX_CLIENTS-1]->setVoluntarySpectator(true);
 	Server()->SetClientName(MAX_CLIENTS-1, "bot");
 	str_copy(m_apPlayers[MAX_CLIENTS-1]->m_TeeInfos.m_SkinName, "itsabot", sizeof(m_apPlayers[MAX_CLIENTS-1]->m_TeeInfos.m_SkinName));
+	str_copy(m_apPlayers[MAX_CLIENTS-1]->original_skin, "itsabot", sizeof(m_apPlayers[MAX_CLIENTS-1]->original_skin));
+	m_apPlayers[MAX_CLIENTS-1]->original_color = 0;
 }
 
 void CGameContext::DeleteTempfile()

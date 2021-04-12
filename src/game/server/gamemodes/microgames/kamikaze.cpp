@@ -12,7 +12,7 @@ MGKamikaze::MGKamikaze(CGameContext* pGameServer, CGameControllerWarioWare* pCon
 void MGKamikaze::Start()
 {
 	// pick a random ingame player
-	do m_Victim = rand() % MAX_CLIENTS;
+	do m_Victim = rand() % MAX_CLIENTS-1;
 	while (not GameServer()->m_apPlayers[m_Victim] or GameServer()->m_apPlayers[m_Victim]->GetTeam() == TEAM_SPECTATORS);
 
 	// change their skin to a bomb
@@ -22,7 +22,7 @@ void MGKamikaze::Start()
 
 	// count online players and send broadcast
 	int online = 0;
-	for (int i=0; i<MAX_CLIENTS; i++)
+	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
 		if (not GameServer()->m_apPlayers[i] or GameServer()->m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS) continue;
 		online++;
@@ -51,7 +51,7 @@ void MGKamikaze::Start()
 
 void MGKamikaze::End()
 {
-	for (int i=0; i<MAX_CLIENTS; i++)
+	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
 		CPlayer *Player = GameServer()->m_apPlayers[i];
 		if (Player) // revert skin
