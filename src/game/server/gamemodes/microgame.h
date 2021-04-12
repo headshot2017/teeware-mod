@@ -64,7 +64,7 @@ public:
 	// void onBotInput(Input)
 	// Called before sending input changes to the bot player with ID 63.
 	// You can use this to implement an AI player of sorts in your microgame.
-	virtual void OnBotInput(CNetObj_PlayerInput* Input) {}
+	virtual void OnBotInput(CNetObj_PlayerInput* Input) {mem_zero(Input, sizeof(CNetObj_PlayerInput));}
 
 	const char *m_microgameName; // the microgame name
 	bool m_boss; // if this microgame is a boss
