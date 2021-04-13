@@ -52,8 +52,8 @@ void MGLuckyDoor::Start()
 		CCharacter *Char = GameServer()->GetPlayerChar(i);
 		if (not Char) continue;
 
-		Char->SetHookOthers(false);
-		Char->SetHitOthers(false);
+		//Char->SetHookOthers(false);
+		//Char->SetHitOthers(false);
 		Char->SetCollideOthers(false);
 		
 		Controller()->teleportPlayer(i, 13);
