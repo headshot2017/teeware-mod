@@ -103,3 +103,8 @@ void MGReachEndNade2::OnCharacterDamage(int Victim, int Killer, int Dmg, int Wea
 		Char->Die(Victim, Weapon, timeLeft/1000.f);
 	}
 }
+
+bool MGReachEndNade2::OnWinMicrogame(int client, int winTile)
+{
+	return (winTile == TILE_WARIOWARE_REACHEND_NADE2_WIN);
+}

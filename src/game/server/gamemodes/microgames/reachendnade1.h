@@ -22,6 +22,7 @@ public:
 	void Tick();
 
 	void OnCharacterDamage(int Victim, int Killer, int Dmg, int Weapon);
+	bool OnWinMicrogame(int client, int winTile);
 
 private:
 	std::vector<vec2> m_NadeSpawnEntities;
