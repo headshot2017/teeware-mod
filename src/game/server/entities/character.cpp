@@ -67,6 +67,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 
 	m_TuneZone = GameServer()->Collision()->IsTune(GameServer()->Collision()->GetMapIndex(Pos));
 	m_TuneZoneOld = -1; // no zone leave msg on spawn
+	m_ForcedTuneZone = -1;
 	m_NeededFaketuning = 0; // reset fake tunings on respawn and send the client
 	SendZoneMsgs(); // we want a entermessage also on spawn
 	GameServer()->SendTuningParams(m_pPlayer->GetCID(), m_TuneZone);
@@ -2016,7 +2017,7 @@ void CCharacter::HandleTuneLayer()
 
 	m_TuneZoneOld = m_TuneZone;
 	int CurrentIndex = GameServer()->Collision()->GetMapIndex(m_Pos);
-	m_TuneZone = GameServer()->Collision()->IsTune(CurrentIndex);
+	m_TuneZone = (m_ForcedTuneZone < 0) ? GameServer()->Collision()->IsTune(CurrentIndex) : m_ForcedTuneZone;
 
 	if(m_TuneZone)
 		m_Core.m_pWorld->m_Tuning[g_Config.m_ClDummy] = GameServer()->TuningList()[m_TuneZone]; // throw tunings from specific zone into gamecore

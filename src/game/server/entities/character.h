@@ -204,6 +204,7 @@ public:
 	int m_Hit;
 	int m_TuneZone;
 	int m_TuneZoneOld;
+	int m_ForcedTuneZone;
 	int m_PainSoundTimer;
 	int m_LastMove;
 	int m_StartTime;

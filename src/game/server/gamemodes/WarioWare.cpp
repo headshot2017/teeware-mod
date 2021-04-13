@@ -29,6 +29,7 @@
 #include "microgames/luckydoor.h"
 #include "microgames/reachendnade1.h"
 #include "microgames/reachendnade2.h"
+#include "microgames/piggyback.h"
 
 // bosses
 #include "microgames/passball.h"
@@ -67,6 +68,7 @@ CGameControllerWarioWare::CGameControllerWarioWare(class CGameContext *pGameServ
 	m_microgames.push_back(new MGNinjaSurvival(pGameServer, this));
 	m_microgames.push_back(new MGReachEndNade1(pGameServer, this));
 	m_microgames.push_back(new MGReachEndNade2(pGameServer, this));
+	m_microgames.push_back(new MGPiggyback(pGameServer, this));
 }
 
 CGameControllerWarioWare::~CGameControllerWarioWare()
