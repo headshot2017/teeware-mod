@@ -1710,15 +1710,21 @@ void CCharacter::HandleTiles(int Index)
 
 	if(((m_TileIndex == TILE_WARIOWARE_WIN) || (m_TileFIndex == TILE_WARIOWARE_WIN)))
 	{
-		Controller->winMicroGame(m_pPlayer->GetCID());
+		int tile = (m_TileIndex == TILE_WARIOWARE_WIN) ? m_TileIndex : m_TileFIndex;
+		if (Controller->isInGame() and Controller->inMicroGame() and Controller->getMicroGame()->OnWinMicrogame(m_pPlayer->GetCID(), tile))
+			Controller->winMicroGame(m_pPlayer->GetCID());
 	}
-	else if(((m_TileIndex == TILE_WARIOWARE_REACHEND_NADE1_WIN) || (m_TileFIndex == TILE_WARIOWARE_REACHEND_NADE1_WIN)) && Controller->inMicroGame() && str_comp(Controller->getMicroGame()->m_microgameName, "reachendnade1") == 0)
+	else if(((m_TileIndex == TILE_WARIOWARE_REACHEND_NADE1_WIN) || (m_TileFIndex == TILE_WARIOWARE_REACHEND_NADE1_WIN)))
 	{
-		Controller->winMicroGame(m_pPlayer->GetCID());
+		int tile = (m_TileIndex == TILE_WARIOWARE_REACHEND_NADE1_WIN) ? m_TileIndex : m_TileFIndex;
+		if (Controller->isInGame() and Controller->inMicroGame() and Controller->getMicroGame()->OnWinMicrogame(m_pPlayer->GetCID(), tile))
+			Controller->winMicroGame(m_pPlayer->GetCID());
 	}
-	else if(((m_TileIndex == TILE_WARIOWARE_REACHEND_NADE2_WIN) || (m_TileFIndex == TILE_WARIOWARE_REACHEND_NADE2_WIN)) && Controller->inMicroGame() && str_comp(Controller->getMicroGame()->m_microgameName, "reachendnade2") == 0)
+	else if(((m_TileIndex == TILE_WARIOWARE_REACHEND_NADE2_WIN) || (m_TileFIndex == TILE_WARIOWARE_REACHEND_NADE2_WIN)))
 	{
-		Controller->winMicroGame(m_pPlayer->GetCID());
+		int tile = (m_TileIndex == TILE_WARIOWARE_REACHEND_NADE2_WIN) ? m_TileIndex : m_TileFIndex;
+		if (Controller->isInGame() and Controller->inMicroGame() and Controller->getMicroGame()->OnWinMicrogame(m_pPlayer->GetCID(), tile))
+			Controller->winMicroGame(m_pPlayer->GetCID());
 	}
 
 	// handle switch tiles
