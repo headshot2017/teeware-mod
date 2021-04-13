@@ -177,6 +177,12 @@ void MGPiggyback::Tick()
 
 bool MGPiggyback::OnWinMicrogame(int client, int winTile)
 {
+	for (unsigned i=0; i<m_pinkys.size(); i++)
+	{
+		if (m_pinkys[i] == client) // don't let pinkys win
+			return false;
+	}
+
 	if (winTile == TILE_WARIOWARE_REACHEND_NADE1_WIN) // kill all pinkys
 	{
 		for (unsigned i=0; i<m_pinkys.size(); i++)
