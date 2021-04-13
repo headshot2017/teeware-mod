@@ -22,6 +22,7 @@ public:
 	void Tick();
 
 	bool OnWinMicrogame(int client, int winTile);
+	int OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon);
 
 private:
 	int m_PiggybackKillAmnt; // amount of pinkys that must piggyback a twintri to kill them. in case of less than 3 players

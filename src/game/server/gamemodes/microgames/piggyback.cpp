@@ -74,7 +74,7 @@ void MGPiggyback::Start()
 		str_copy(Player->m_TeeInfos.m_SkinName, "pinky", sizeof(Player->m_TeeInfos.m_SkinName));
 		Player->m_TeeInfos.m_UseCustomColor = 0;
 
-		GameServer()->SendBroadcast("Piggyback the twintris!", player);
+		GameServer()->SendBroadcast("Piggyback the green tees!", player);
 		Controller()->teleportPlayer(player, 20);
 	}
 
@@ -196,4 +196,26 @@ bool MGPiggyback::OnWinMicrogame(int client, int winTile)
 		return true;
 	}
 	return false;
+}
+
+int MGPiggyback::OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon)
+{
+	//int victim = pVictim->GetPlayer()->GetCID();
+	int alive = 0;
+	for (unsigned i=0; i<m_twintris.size(); i++)
+	{
+		CCharacter *Char = GameServer()->GetPlayerChar(m_twintris[i]);
+		if (Char and Char != pVictim)
+			alive++;
+	}
+
+	if (not alive) // all twintris died
+	{
+		for (unsigned i=0; i<m_pinkys.size(); i++)
+		{
+			Controller()->winMicroGame(m_pinkys[i]);
+		}
+	}
+
+	return 0;
 }
