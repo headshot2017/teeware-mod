@@ -211,6 +211,13 @@ bool MGPiggyback::OnWinMicrogame(int client, int winTile)
 			float timeLeft = Controller()->getTimeLength() - Controller()->getTimer();
 			Char->Die(m_pinkys[i], WEAPON_WORLD, timeLeft/1000.f);
 		}
+
+		// all twintris win
+		for (unsigned i=0; i<m_twintris.size(); i++)
+		{
+			Controller()->winMicroGame(m_twintris[i]);
+		}
+		
 		return true;
 	}
 	return false;
