@@ -704,6 +704,7 @@ void IGameController::Tick()
 						{
 							// move player to spectator
 							GameServer()->m_apPlayers[i]->SetTeam(TEAM_SPECTATORS);
+							GameServer()->m_apPlayers[i]->setVoluntarySpectator(true);
 						}
 						break;
 					case 1:
@@ -716,7 +717,10 @@ void IGameController::Tick()
 							if(Spectators >= g_Config.m_SvSpectatorSlots)
 								Server()->Kick(i, "Kicked for inactivity");
 							else
+							{
 								GameServer()->m_apPlayers[i]->SetTeam(TEAM_SPECTATORS);
+								GameServer()->m_apPlayers[i]->setVoluntarySpectator(true);
+							}
 						}
 						break;
 					case 2:
