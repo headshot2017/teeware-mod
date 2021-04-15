@@ -207,6 +207,28 @@ void MGPassBall::Tick()
 	}
 }
 
+void MGPassBall::OnCharacterDamage(int Victim, int Killer, int Dmg, int Weapon)
+{
+	if (Weapon == WEAPON_HAMMER) // hit with hammer
+	{
+		CCharacter *cVictim = GameServer()->GetPlayerChar(Victim);
+		CCharacter *cKiller = GameServer()->GetPlayerChar(Killer);
+		if (not cVictim or not cKiller) return;
+
+		// take their grenade. helpful against afks/trolls
+		if (cVictim->GetWeaponGot(WEAPON_GRENADE) and not cKiller->GetWeaponGot(WEAPON_GRENADE))
+		{
+			cVictim->SetWeaponGot(WEAPON_GRENADE, false);
+			if (cVictim->GetActiveWeapon() == WEAPON_GRENADE and cVictim->GetLastWeapon() != WEAPON_GRENADE)
+				cVictim->SetWeapon(cVictim->GetLastWeapon());
+
+			cKiller->GiveWeapon(WEAPON_GRENADE, -1);
+			cKiller->SetWeapon(WEAPON_GRENADE);
+			cKiller->SetActiveWeapon(WEAPON_GRENADE); // again just in case
+		}
+	}
+}
+
 void MGPassBall::pushBall(CProjectile* pProj)
 {
 	if (pProj->m_Pos.x >= m_SeparatorLeft.x and pProj->m_Pos.x <= m_SeparatorRight.x) // push ball stuck in the middle

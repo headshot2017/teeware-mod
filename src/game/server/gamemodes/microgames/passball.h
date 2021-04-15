@@ -23,6 +23,8 @@ public:
 	void End();
 	void Tick();
 
+	void OnCharacterDamage(int Victim, int Killer, int Dmg, int Weapon);
+
 	void pushBall(CProjectile *pProj); // push a ball stuck in the middle to the nearest side
 
 private:
