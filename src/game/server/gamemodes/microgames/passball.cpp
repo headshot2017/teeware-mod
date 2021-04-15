@@ -1,9 +1,6 @@
 // WarioWare mod by Headshotnoby
 
 #include <engine/shared/config.h>
-#include <game/server/gameworld.h>
-#include <game/server/entity.h>
-#include <game/server/entities/projectile.h>
 #include "passball.h"
 
 MGPassBall::MGPassBall(CGameContext* pGameServer, CGameControllerWarioWare* pController) : Microgame(pGameServer, pController)
@@ -16,6 +13,7 @@ MGPassBall::MGPassBall(CGameContext* pGameServer, CGameControllerWarioWare* pCon
 	int Height = GameServer()->Collision()->GetHeight();
 
 	std::vector<vec2> teamseps;
+	float sepLeft = 0, sepRight = 0;
 
 	for (int i = 0; i < Width * Height; i++)
 	{
@@ -27,15 +25,19 @@ MGPassBall::MGPassBall(CGameContext* pGameServer, CGameControllerWarioWare* pCon
 
 			case TILE_WARIOWARE_BALLTEAMSEP:
 				teamseps.push_back(vec2(i % Width * 32 + 16, i / Width * 32 + 16));
+				sepLeft = (sepLeft > 0) ? min(sepLeft, teamseps.back().x) : teamseps.back().x;
+				sepRight = (sepRight > 0) ? max(sepRight, teamseps.back().x) : teamseps.back().x;
 				break;
 		}
 	}
 
 	for (unsigned int i=0; i<teamseps.size(); i++)
 	{
-		m_SeparatorPos.x += teamseps[i].x / 2.f;
-		m_SeparatorPos.y += teamseps[i].y / 2.f;
+		m_SeparatorPos.x += teamseps[i].x / teamseps.size();
+		m_SeparatorPos.y += teamseps[i].y / teamseps.size();
 	}
+	m_SeparatorLeft = vec2(sepLeft, m_SeparatorPos.y);
+	m_SeparatorRight = vec2(sepRight, m_SeparatorPos.y);
 
 	char buf[128];
 	str_format(buf, sizeof(buf), "%d total ball spawn entities", m_BallSpawns.size());
@@ -202,5 +204,14 @@ void MGPassBall::Tick()
 
 		GameServer()->SendChat(-1, CGameContext::CHAT_ALL, abuf);
 		GameServer()->SendChat(-1, CGameContext::CHAT_ALL, abuf2);
+	}
+}
+
+void MGPassBall::pushBall(CProjectile* pProj)
+{
+	if (pProj->m_Pos.x >= m_SeparatorLeft.x and pProj->m_Pos.x <= m_SeparatorRight.x) // push ball stuck in the middle
+	{
+		int dir = sign(pProj->m_Pos.x - m_SeparatorPos.x);
+		pProj->AddDirection(vec2(dir, 0));
 	}
 }

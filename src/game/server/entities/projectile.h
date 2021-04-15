@@ -61,6 +61,7 @@ private:
 
 public:
 
+	void AddDirection(vec2 dir) {m_Direction += dir;}
 	void SetBouncing(int Value);
 	int GetBouncing() const {return m_Bouncing;}
 	void SetFootMode(int value) {m_FootMode = value;}

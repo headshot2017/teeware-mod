@@ -3,6 +3,7 @@
 #include <game/generated/protocol.h>
 #include <game/server/gamecontext.h>
 #include <game/server/gamemodes/WarioWare.h>
+#include <game/server/gamemodes/microgames/passball.h>
 #include "projectile.h"
 
 #include <engine/shared/config.h>
@@ -214,10 +215,18 @@ void CProjectile::Tick()
 				else
 					m_Direction.y = -(m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*GameServer()->Tuning()->m_GrenadeSpeed*(Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed())/(5+100)*100;
 
-				/*
-				if (m_CollisionByY >= 50)
-					GameServer()->m_World.DestroyEntity(this);
-				*/
+				
+				if (m_CollisionByY >= 30)
+				{
+					//GameServer()->m_World.DestroyEntity(this);
+					CGameControllerWarioWare* Controller = ((CGameControllerWarioWare*)GameServer()->m_pController);
+					if (Controller->isInGame() and Controller->inMicroGame() and str_comp(Controller->getMicroGame()->m_microgameName, "passball") == 0)
+					{
+						MGPassBall* microgame = (MGPassBall*)Controller->getMicroGame();
+						microgame->pushBall(this);
+					}
+				}
+				
 				m_CollisionByY++;
 			}
 			else
