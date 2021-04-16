@@ -17,6 +17,7 @@ void MGPiggyback::Start()
 
 	m_twintris.clear();
 	m_pinkys.clear();
+	m_piggybackingWho.clear();
 
 	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
