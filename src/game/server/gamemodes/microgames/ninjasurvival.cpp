@@ -94,9 +94,7 @@ void MGNinjaSurvival::OnCharacterDamage(int Victim, int Killer, int Dmg, int Wea
 
 		if(pVictim->GetHealth() <= 0)
 		{
-			float timeLeft = Controller()->getTimeLength() - Controller()->getTimer();
-			pVictim->Die(Killer, Weapon, timeLeft/1000.f);
-			Controller()->g_Complete[Victim] = false;
+			Controller()->killAndLoseMicroGame(Victim, Killer, Weapon);
 
 			// set attacker's face to happy (taunt!)
 			pKiller->SetEmoteType(EMOTE_HAPPY);

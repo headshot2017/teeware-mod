@@ -114,10 +114,6 @@ void MGBombRain::OnCharacterDamage(int Victim, int Killer, int Dmg, int Weapon)
 {
 	if (Killer == -1 and Weapon == WEAPON_GRENADE) // unlucky guy hit by bomb
 	{
-		CCharacter *Char = GameServer()->GetPlayerChar(Victim);
-		float timeLeft = Controller()->getTimeLength() - Controller()->getTimer();
-
-		Char->Die(Victim, Weapon, timeLeft/1000.f);
-		Controller()->g_Complete[Victim] = false;
+		Controller()->killAndLoseMicroGame(Victim, -1, Weapon);
 	}
 }

@@ -53,8 +53,7 @@ void MGSimon::Tick()
 			{
 				if (m_Someone) // simon didn't say it
 				{
-					Controller()->g_Complete[i] = false;
-					Char->Die(i, WEAPON_WORLD, timeLeft/1000.f);
+					Controller()->killAndLoseMicroGame(i);
 					GameServer()->SendChatTarget(i, "Simon didn't say it!...");
 				}
 				else

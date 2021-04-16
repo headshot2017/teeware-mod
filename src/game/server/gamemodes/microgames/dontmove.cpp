@@ -47,8 +47,7 @@ void MGDontMove::Tick()
 			if ((not m_Mode and (Char->IsMoving() or Char->GetInput()->m_Hook&1 or Char->GetInput()->m_Fire&1 or Char->GetInput()->m_Jump==1)) or // don't move
 				(m_Mode and (not Char->IsMoving() and (Char->Core()->m_Vel.x < 1 and Char->Core()->m_Vel.x > -1) and (Char->Core()->m_Vel.y < 1 and Char->Core()->m_Vel.y > -1)))) // don't stop moving
 			{
-				Controller()->g_Complete[i] = false;
-				Char->Die(i, WEAPON_WORLD, timeLeft/1000.f);
+				Controller()->killAndLoseMicroGame(i);
 			}
 		}
 	}

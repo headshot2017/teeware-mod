@@ -63,8 +63,7 @@ void MGTileColors::Tick()
 			if (m_currColor+185 != TileIndex) // first color begins at entity 185
 			{
 				// they're not inside this color, die
-				float timeLeft = Controller()->getTimeLength() - Controller()->getTimer();
-				Char->Die(i, WEAPON_WORLD, timeLeft/1000.f);
+				Controller()->killAndLoseMicroGame(i);
 			}
 			else if (m_turn) // they win
 			{

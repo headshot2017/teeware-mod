@@ -36,8 +36,11 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 	CCharacter *pHit;
 	bool pDontHitSelf = g_Config.m_SvOldLaser || (m_Bounces == 0 && !m_WasTele);
 
+	bool isMGTarget = false;
+
 	if (controller->inMicroGame() and str_comp(controller->getMicroGame()->m_microgameName, "target") == 0)
 	{
+		isMGTarget = true;
 		pHit = GameServer()->m_World.IntersectBotCharacter(m_Pos, To, 0.f, At);
 	}
 	else
@@ -48,13 +51,19 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 			pHit = GameServer()->m_World.IntersectCharacter(m_Pos, To, 0.f, At, pDontHitSelf ? pOwnerChar : 0, m_Owner, pOwnerChar);
 	}
 
-	if(!pHit || (pHit == pOwnerChar && g_Config.m_SvOldLaser) || (pHit != pOwnerChar && pOwnerChar ? (pOwnerChar->m_Hit&CCharacter::DISABLE_HIT_RIFLE and pHit->GetPlayer()->GetCID() < MAX_CLIENTS-1 and m_Type == WEAPON_RIFLE) || (pOwnerChar->m_Hit&CCharacter::DISABLE_HIT_SHOTGUN && m_Type == WEAPON_SHOTGUN) : !g_Config.m_SvHit))
+	if(!pHit || (pHit == pOwnerChar && g_Config.m_SvOldLaser) || (!isMGTarget && (pHit != pOwnerChar && pOwnerChar ? (pOwnerChar->m_Hit&CCharacter::DISABLE_HIT_RIFLE and pHit->GetPlayer()->GetCID() < MAX_CLIENTS-1 and m_Type == WEAPON_RIFLE) || (pOwnerChar->m_Hit&CCharacter::DISABLE_HIT_SHOTGUN && m_Type == WEAPON_SHOTGUN) : !g_Config.m_SvHit)))
 		return false;
 	m_From = From;
 	m_Pos = At;
 	m_Energy = -1;
 	if (m_Type == WEAPON_SHOTGUN)
 	{
+		// WarioWare
+		if (isMGTarget) {
+			if (pHit->GetPlayer()->GetCID() == MAX_CLIENTS-1)
+				pHit->TakeDamage(vec2(0, 0), 1, m_Owner, m_Type);
+			return true;
+		}
 		vec2 Temp;
 
 		float Strength;
@@ -82,9 +91,10 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 		pHit->UnFreeze();
 		
 		// WarioWare
-		if (pHit->GetPlayer()->GetCID() == MAX_CLIENTS-1)
-		{
-			controller->winMicroGame(m_Owner);
+		if (isMGTarget) {
+			if (pHit->GetPlayer()->GetCID() == MAX_CLIENTS-1)
+				pHit->TakeDamage(vec2(0, 0), 1, m_Owner, m_Type);
+			return true;
 		}
 	}
 	return true;

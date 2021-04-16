@@ -80,10 +80,7 @@ void MGKamikaze::Tick()
 void MGKamikaze::OnCharacterDamage(int Victim, int Killer, int Dmg, int Weapon)
 {
 	if (Weapon != WEAPON_WORLD) return;
-	float timeLeft = Controller()->getTimeLength() - Controller()->getTimer();
-
-	CCharacter *cVictim = GameServer()->GetPlayerChar(Victim);
-	if (cVictim) cVictim->Die(Killer, Weapon, timeLeft/1000.f); // respawn in secs
+	Controller()->killAndLoseMicroGame(Victim, Killer, Weapon);
 }
 
 int MGKamikaze::OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon)

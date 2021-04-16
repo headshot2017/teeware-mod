@@ -27,10 +27,7 @@ void MGHitEnemy::Tick()
 
 void MGHitEnemy::OnCharacterDamage(int Victim, int Killer, int Dmg, int Weapon)
 {
-	float timeLeft = Controller()->getTimeLength() - Controller()->getTimer();
-
-	CCharacter *cVictim = GameServer()->GetPlayerChar(Victim);
-	if (cVictim) cVictim->Die(Killer, Weapon, timeLeft/1000.f); // respawn in secs
+	Controller()->killAndLoseMicroGame(Victim, Killer, Weapon);
 }
 
 int MGHitEnemy::OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon)
