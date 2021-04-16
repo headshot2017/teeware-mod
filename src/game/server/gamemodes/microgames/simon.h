@@ -23,6 +23,7 @@ public:
 private:
 	int m_Someone; // if "Someone says" then don't do it
 	int m_SimonMode; // look up, look down, jump
+	int m_SimonNegative; // do, don't
 };
 
 #endif // _MICROGAME_SIMON_H
