@@ -26,7 +26,7 @@ void MGSimon::Start()
 		Controller()->g_Complete[i] = (m_Someone != m_SimonNegative) ? true : false;
 	
 	char aBuf[96];
-	str_format(aBuf, sizeof(aBuf), "%s说： %s！", simonNames[m_Someone], simonModes[m_SimonNegative][m_SimonMode]);
+	str_format(aBuf, sizeof(aBuf), "%s says: %s!", simonNames[m_Someone], simonModes[m_SimonNegative][m_SimonMode]);
 	GameServer()->SendBroadcast(aBuf, -1);
 
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgSimonSays_Offset, g_Config.m_WwSndMgSimonSays_Length);

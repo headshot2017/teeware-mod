@@ -23,7 +23,7 @@ void MGTarget::Start()
 		Char->SetHitOthers(false);
 		Char->SetCollideOthers(false);
 		
-		for (int j=0; j<4; j++)
+		for (int j=1; j<4; j++)
 			Char->GiveWeapon(weapons[j], 3);
 		Char->SetWeapon(weapons[rand() % 4]);
 		
@@ -51,7 +51,7 @@ void MGTarget::End()
 		CCharacter *Char = GameServer()->GetPlayerChar(i);
 		if (not Char) continue;
 
-		for (int j=0; j<4; j++)
+		for (int j=1; j<4; j++)
 			Char->SetWeaponGot(weapons[j], false);
 
 		Char->SetWeapon(WEAPON_HAMMER);
