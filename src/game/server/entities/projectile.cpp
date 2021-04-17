@@ -328,11 +328,13 @@ void CProjectile::Tick()
 					// explosion
 					GameServer()->CreateExplosion(ColPos, m_Owner, m_Weapon, true, (!pTargetChr ? -1 : pTargetChr->Team()),
 					(m_Owner != -1)? TeamMask : -1LL);
+				} else {
+					GameServer()->CreateExplosion(ColPos, m_Owner, m_Weapon, false, (!pTargetChr ? -1 : pTargetChr->Team()),
+					(m_Owner != -1)? TeamMask : -1LL);
 				}
-				GameServer()->CreateExplosion(ColPos, m_Owner, m_Weapon, false, (!pTargetChr ? -1 : pTargetChr->Team()),
-				(m_Owner != -1)? TeamMask : -1LL);
+
 				GameServer()->CreateSound(ColPos, m_SoundImpact,
-				(m_Owner != -1)? TeamMask : -1LL);
+					(m_Owner != -1)? TeamMask : -1LL);
 			}
 		}
 		else if(pTargetChr && m_Freeze && ((m_Layer == LAYER_SWITCH && GameServer()->Collision()->m_pSwitchers[m_Number].m_Status[pTargetChr->Team()]) || m_Layer != LAYER_SWITCH))
