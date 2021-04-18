@@ -11,6 +11,8 @@
 
 class MGTarget : public Microgame
 {
+private:
+	int m_UseWeapon;
 public:
 	MGTarget(CGameContext* pGameServer, CGameControllerWarioWare* pController);
 	~MGTarget() {}
@@ -18,6 +20,7 @@ public:
 	void Start();
 	void End();
 	void Tick();
+	void OnCharacterDamage(int Victim, int Killer, int Dmg, int Weapon);
 };
 
 #endif // _MICROGAME_TARGET_H

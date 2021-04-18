@@ -22,6 +22,7 @@ public:
 
 private:
 	int m_Mode; // whether it's "don't move" or "don't stop moving"
+	int m_Phrase; // which phrase to use
 };
 
 #endif // _MICROGAME_DONTMOVE_H

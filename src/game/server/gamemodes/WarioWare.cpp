@@ -395,6 +395,16 @@ void CGameControllerWarioWare::winMicroGame(int client)
 	GameServer()->CreateDeath(Char->m_Pos, client);
 }
 
+void CGameControllerWarioWare::killAndLoseMicroGame(int client, int killer, int weapon)
+{
+	CCharacter *Char = GameServer()->GetPlayerChar(client);
+	if (not Char) return;
+	
+	g_Complete[client] = false;
+	float timeLeft = getTimeLength() - getTimer();
+	Char->Die(killer, weapon, timeLeft/1000.0f);
+}
+
 int CGameControllerWarioWare::OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon)
 {
 	if (isInGame() and inMicroGame())

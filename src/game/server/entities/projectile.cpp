@@ -117,6 +117,8 @@ vec2 CProjectile::GetPos(float Time)
 
 void CProjectile::Tick()
 {
+	CGameControllerWarioWare* controller = ((CGameControllerWarioWare*)GameServer()->m_pController);
+
 	if (m_FootMode && m_Type == WEAPON_GRENADE) // taken from teefoot mod
 	{
 		float PreviousTick = (Server()->Tick()-m_StartTick-1)/(float)Server()->TickSpeed();
@@ -145,7 +147,7 @@ void CProjectile::Tick()
 					TeamMask = OwnerChar->Teams()->TeamMask(OwnerChar->Team(), -1, m_Owner);
 				}
 
-				GameServer()->CreateExplosion(CurPosition, m_Owner, m_Weapon, m_Owner == -1, (!OwnerChar ? -1 : OwnerChar->Team()),
+				GameServer()->CreateExplosion(CurPosition, m_Owner, m_Weapon, false, (!OwnerChar ? -1 : OwnerChar->Team()),
 				(m_Owner != -1)? TeamMask : -1LL);
 				GameServer()->CreateSound(CurPosition, m_SoundImpact,
 				(m_Owner != -1)? TeamMask : -1LL);
@@ -261,7 +263,7 @@ void CProjectile::Tick()
 			}
 			else if (m_FootMode == 2 and TimeAlive > 1.25f) // explode (avoid spawnkill by waiting 1.25sec beforehand)
 			{
-				GameServer()->CreateExplosion(CurPosition, m_Owner, m_Weapon, m_Owner == -1, (!TChar ? -1 : TChar->Team()), -1LL);
+				GameServer()->CreateExplosion(CurPosition, m_Owner, m_Weapon, false, (!TChar ? -1 : TChar->Team()), -1LL);
 				GameServer()->CreateSound(CurPosition, m_SoundImpact, -1LL);
 				GameServer()->m_World.DestroyEntity(this);
 			}
@@ -308,17 +310,31 @@ void CProjectile::Tick()
 	{
 		GameServer()->m_World.DestroyEntity(this);
 	}
+	bool isMGTarget = false;
+	if (controller->inMicroGame() and str_comp(controller->getMicroGame()->m_microgameName, "target") == 0)
+		isMGTarget = true;
 
-	if( ((pTargetChr && (pOwnerChar ? !(pOwnerChar->m_Hit&CCharacter::DISABLE_HIT_GRENADE) : g_Config.m_SvHit || m_Owner == -1 || pTargetChr == pOwnerChar)) || Collide || GameLayerClipped(CurPos)) && !isWeaponCollide)
+	if( ((pTargetChr && (pOwnerChar ? (isMGTarget && pTargetChr->GetPlayer()->GetCID() == MAX_CLIENTS - 1) || !(pOwnerChar->m_Hit&CCharacter::DISABLE_HIT_GRENADE) : g_Config.m_SvHit || m_Owner == -1 || pTargetChr == pOwnerChar)) || Collide || GameLayerClipped(CurPos)) && !isWeaponCollide)
 	{
 		if(m_Explosive/*??*/ && (!pTargetChr || (pTargetChr && (!m_Freeze || (m_Weapon == WEAPON_SHOTGUN && Collide)))))
 		{
 			if (m_Bouncing == 0)
 			{
-				GameServer()->CreateExplosion(ColPos, m_Owner, m_Weapon, m_Owner == -1, (!pTargetChr ? -1 : pTargetChr->Team()),
-				(m_Owner != -1)? TeamMask : -1LL);
+				// direct hit only
+				if (isMGTarget) {
+					// force damage
+					if (pTargetChr)
+						pTargetChr->TakeDamage(vec2(0, 0), 1, m_Owner, m_Weapon);
+					// explosion
+					GameServer()->CreateExplosion(ColPos, m_Owner, m_Weapon, true, (!pTargetChr ? -1 : pTargetChr->Team()),
+					(m_Owner != -1)? TeamMask : -1LL);
+				} else {
+					GameServer()->CreateExplosion(ColPos, m_Owner, m_Weapon, false, (!pTargetChr ? -1 : pTargetChr->Team()),
+					(m_Owner != -1)? TeamMask : -1LL);
+				}
+
 				GameServer()->CreateSound(ColPos, m_SoundImpact,
-				(m_Owner != -1)? TeamMask : -1LL);
+					(m_Owner != -1)? TeamMask : -1LL);
 			}
 		}
 		else if(pTargetChr && m_Freeze && ((m_Layer == LAYER_SWITCH && GameServer()->Collision()->m_pSwitchers[m_Number].m_Status[pTargetChr->Team()]) || m_Layer != LAYER_SWITCH))
@@ -341,6 +357,8 @@ void CProjectile::Tick()
 		}
 		else if (m_Weapon == WEAPON_GUN)
 		{
+			if (isMGTarget && pTargetChr)
+				pTargetChr->TakeDamage(vec2(0, 0), 1, m_Owner, m_Weapon);
 			GameServer()->CreateDamageInd(CurPos, -atan2(m_Direction.x, m_Direction.y), 10, (m_Owner != -1)? TeamMask : -1LL);
 			GameServer()->m_World.DestroyEntity(this);
 		}
@@ -361,7 +379,7 @@ void CProjectile::Tick()
 					TeamMask = pOwnerChar->Teams()->TeamMask(pOwnerChar->Team(), -1, m_Owner);
 			}
 
-			GameServer()->CreateExplosion(ColPos, m_Owner, m_Weapon, m_Owner == -1, (!pOwnerChar ? -1 : pOwnerChar->Team()),
+			GameServer()->CreateExplosion(ColPos, m_Owner, m_Weapon, false, (!pOwnerChar ? -1 : pOwnerChar->Team()),
 			(m_Owner != -1)? TeamMask : -1LL);
 			GameServer()->CreateSound(ColPos, m_SoundImpact,
 			(m_Owner != -1)? TeamMask : -1LL);
