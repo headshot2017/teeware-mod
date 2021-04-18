@@ -27,7 +27,7 @@ void MGHitEnemy::Tick()
 
 void MGHitEnemy::OnCharacterDamage(int Victim, int Killer, int Dmg, int Weapon)
 {
-	Controller()->killAndLoseMicroGame(Victim, Killer, Weapon);
+	Controller()->killPlayer(Victim, Killer, Weapon);
 }
 
 int MGHitEnemy::OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon)

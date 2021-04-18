@@ -59,6 +59,7 @@ public:
 	void rollMicroGame();
 	void winMicroGame(int client);
 	void killAndLoseMicroGame(int client, int killer = -1, int weapon = -1);
+	void killPlayer(int client, int killer = -1, int weapon = -1);
 	void onMicroGameEnd();
 	void nextWarioState();
 	void doGameOver();

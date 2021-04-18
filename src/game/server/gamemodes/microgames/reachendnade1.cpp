@@ -97,7 +97,7 @@ void MGReachEndNade1::OnCharacterDamage(int Victim, int Killer, int Dmg, int Wea
 {
 	if (Killer == -1 and Weapon == WEAPON_GRENADE)
 	{
-		Controller()->killAndLoseMicroGame(Victim, -1, Weapon);
+		Controller()->killPlayer(Victim, -1, Weapon);
 	}
 }
 
