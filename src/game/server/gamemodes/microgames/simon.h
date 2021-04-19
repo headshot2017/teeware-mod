@@ -24,6 +24,7 @@ private:
 	int m_Someone; // if "Someone says" then don't do it
 	int m_SimonMode; // look up, look down, jump
 	int m_SimonNegative; // do, don't
+	bool m_SomeoneDontJump[MAX_CLIENTS]; // if player did the "someone says don't jump" objective
 };
 
 #endif // _MICROGAME_SIMON_H
