@@ -37,7 +37,7 @@ void MGPiggyback::Start()
 	m_PiggybackKillAmnt = (online.size()-1 < 3) ? online.size()-1 : 3;
 
 	// count twintris
-	unsigned int twintris = online.size() / 4 + 1;
+	unsigned int twintris = online.size() / 3 + 1;
 
 	// count pinkys
 	unsigned int pinkys = online.size() - twintris;
