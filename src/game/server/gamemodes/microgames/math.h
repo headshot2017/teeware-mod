@@ -5,7 +5,7 @@
 
 /*
 	Math microgame.
-	Addition, substraction, multiplication.
+	Addition, substraction, multiplication, division.
 	2+2=4-1=3 Quick maths.
 */
 
@@ -21,7 +21,7 @@ public:
 	bool onChat(int client, const char *msg);
 
 private:
-	char m_operation; // one of three arithmetic operations.
+	char m_operation; // one of four arithmetic operations.
 	int m_num1, m_num2; // two numbers.
 	bool m_winFirst; // player answered first
 };
