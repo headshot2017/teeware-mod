@@ -122,7 +122,7 @@ void MGNinjaSurvival::OnBotInput(CNetObj_PlayerInput* Input)
 		m_PathFound = false;
 		do
 		{
-			m_Target = rand() % MAX_CLIENTS-1;
+			m_Target = rand() % (MAX_CLIENTS-1);
 			loops++;
 		}
 		while (loops < 300 and not (Target = GameServer()->GetPlayerChar(m_Target)));

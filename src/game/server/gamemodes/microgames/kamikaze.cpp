@@ -12,7 +12,7 @@ MGKamikaze::MGKamikaze(CGameContext* pGameServer, CGameControllerWarioWare* pCon
 void MGKamikaze::Start()
 {
 	// pick a random ingame player
-	do m_Victim = rand() % MAX_CLIENTS-1;
+	do m_Victim = rand() % (MAX_CLIENTS-1);
 	while (not GameServer()->m_apPlayers[m_Victim] or GameServer()->m_apPlayers[m_Victim]->GetTeam() == TEAM_SPECTATORS);
 
 	// change their skin to a bomb
