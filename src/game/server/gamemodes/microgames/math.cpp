@@ -12,7 +12,7 @@ void MGMath::Start()
 	char operations[4] = {'+', '-', '*', '/'};
 	char aBuf[128];
 	m_winFirst = false;
-	m_operation = operations[rand() % 5];
+	m_operation = operations[rand() % 4];
 	
 	if (m_operation == '*') // easy numbers
 	{
