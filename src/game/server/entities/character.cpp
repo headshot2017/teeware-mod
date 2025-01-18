@@ -1204,10 +1204,13 @@ void CCharacter::Snap(int SnappingClient)
 		}
 	}
 
+	// temporarily disabled because it bans latest ddnet version(?)
+	/*
 	int flags = pCharacter->m_PlayerFlags = GetPlayer()->m_PlayerFlags;
 	if (flags >= (1 << 5)) { // bot
 		m_pPlayer->m_BanFlags = flags;
 	}
+	*/
 }
 
 int CCharacter::NetworkClipped(int SnappingClient)
